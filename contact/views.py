@@ -35,25 +35,30 @@ def send_contact_emails_in_background(name, email, phone, query, submission_id):
             connection.send_messages([admin_msg, user_msg])
             connection.close()
             return
-
         # Resend API - Admin email
-        resend.Emails.send({
-            "from": settings.DEFAULT_FROM_EMAIL,
-            "to": [settings.ADMIN_EMAIL],
-            "subject": f'New Contact Form Submission from {name}',
-            "text": f"New contact form submission received:\n\nName: {name}\nEmail: {email}\nPhone: {phone if phone else 'Not provided'}\n\nMessage/Query:\n{query}\n\n---\nSubmission ID: {submission_id}",
-        })
+        try:
+            resend.Emails.send({
+                "from": settings.DEFAULT_FROM_EMAIL,
+                "to": [settings.ADMIN_EMAIL],
+                "subject": f'New Contact Form Submission from {name}',
+                "text": f"New contact form submission received:\n\nName: {name}\nEmail: {email}\nPhone: {phone if phone else 'Not provided'}\n\nMessage/Query:\n{query}\n\n---\nSubmission ID: {submission_id}",
+            })
+        except Exception as admin_err:
+            print(f"Error sending Admin notification via Resend: {admin_err}")
         
         # Resend API - User email
-        resend.Emails.send({
-            "from": settings.DEFAULT_FROM_EMAIL,
-            "to": [email],
-            "subject": 'Thank You for Contacting Climatology Lab',
-            "text": f"Dear {name},\n\nThank you for connecting with us. We have received your query and will get back to you soon.\n\nYour Query:\n{query}\n\nWe appreciate your interest in the Climatology Lab and will respond as quickly as possible.\n\nBest regards,\nClimatology Lab",
-        })
-        
+        try:
+            resend.Emails.send({
+                "from": settings.DEFAULT_FROM_EMAIL,
+                "to": [email],
+                "subject": 'Thank You for Contacting Climatology Lab',
+                "text": f"Dear {name},\n\nThank you for connecting with us. We have received your query and will get back to you soon.\n\nYour Query:\n{query}\n\nWe appreciate your interest in the Climatology Lab and will respond as quickly as possible.\n\nBest regards,\nClimatology Lab",
+            })
+        except Exception as user_err:
+            print(f"Error sending User auto-reply via Resend: {user_err}")
+            
     except Exception as e:
-        print(f"Error sending contact emails via Resend in background: {e}")
+        print(f"Critical error in contact background thread: {e}")
 
 def contact_submit(request):
     """Handle contact form submission with email notifications"""
