@@ -9,6 +9,8 @@ import threading
 def send_contact_emails_in_background(name, email, phone, query, submission_id):
     """Sends both admin notification and user auto-reply over a single SMTP connection in the background."""
     try:
+        from django.core.mail import EmailMessage, get_connection
+        # Create a new connection since this is a new thread
         connection = get_connection()
         connection.open()
         

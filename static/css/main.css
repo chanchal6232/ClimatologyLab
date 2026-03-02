@@ -165,6 +165,14 @@ a {
 .stat-item {
     text-align: center;
     flex: 1 1 200px;
+    background: white;
+    /* ensure stats dont overlap transparently */
+    padding: 20px 10px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    width: 100%;
+    /* For mobile stack */
+    max-width: 300px;
 }
 
 .stat-number {
@@ -191,6 +199,8 @@ a {
     padding: 80px 20px;
     max-width: 1200px;
     margin: 0 auto;
+    overflow: hidden;
+    /* Prevent carousel bleed */
 }
 
 .notice-board h2 {
@@ -202,8 +212,10 @@ a {
 
 .workshops-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 20px;
+    padding: 10px;
+    /* Safe area for shadows */
 }
 
 .workshop-card {
@@ -212,6 +224,7 @@ a {
     padding: 25px 20px;
     text-align: center;
     transition: all 0.3s ease;
+    height: 100%;
 }
 
 .workshop-card:hover {
@@ -246,6 +259,7 @@ a {
     background-color: var(--black);
     padding: clamp(40px, 8vw, 80px) 20px;
     text-align: center;
+    word-wrap: break-word;
 }
 
 .contact-header h1 {
@@ -253,12 +267,14 @@ a {
     font-weight: 300;
     color: var(--white);
     margin-bottom: 5px;
+    line-height: 1.2;
 }
 
 .contact-header .subtitle {
     font-size: clamp(40px, 8vw, 72px);
     font-weight: 300;
     color: var(--primary-blue);
+    line-height: 1.2;
 }
 
 /* Footer */
@@ -400,6 +416,7 @@ a {
     align-self: center;
     width: 100%;
     letter-spacing: 1.5px;
+    margin-top: 10px;
 }
 
 .submit-btn:hover {
@@ -459,31 +476,35 @@ a {
 
 /* Research Section */
 .research-hero {
-    padding: clamp(40px, 8vw, 80px) 20px;
+    padding: clamp(30px, 6vw, 80px) 20px;
+    word-wrap: break-word;
 }
 
 .research-hero h1 {
-    font-size: clamp(36px, 8vw, 64px);
+    font-size: clamp(30px, 8vw, 64px);
     font-weight: 700;
     color: var(--red);
-    margin-bottom: 0;
+    margin-bottom: 5px;
     text-transform: uppercase;
+    line-height: 1.1;
 }
 
 .research-hero h2 {
-    font-size: clamp(36px, 8vw, 64px);
+    font-size: clamp(30px, 8vw, 64px);
     font-weight: 700;
     color: var(--yellow);
-    margin-bottom: 0;
+    margin-bottom: 5px;
     text-transform: uppercase;
+    line-height: 1.1;
 }
 
 .research-hero h3 {
-    font-size: clamp(36px, 8vw, 64px);
+    font-size: clamp(30px, 8vw, 64px);
     font-weight: 700;
     color: var(--primary-blue);
-    margin-bottom: 40px;
+    margin-bottom: 30px;
     text-transform: uppercase;
+    line-height: 1.1;
 }
 
 .research-content {
