@@ -634,9 +634,23 @@ def import_data(request, model_type):
 
 import random
 import time
+import threading
 from django.core.mail import send_mail
 from django.conf import settings
 from django.contrib.auth.models import User
+
+def send_otp_email_in_background(email, otp):
+    """Sends the OTP email in a background thread."""
+    try:
+        send_mail(
+            subject='Climatology Lab - Password Reset OTP',
+            message=f'Your OTP for password reset is: {otp}\n\nThis code expires in 10 minutes.\n\nIf you did not request this, please ignore this email.',
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[email],
+            fail_silently=False,
+        )
+    except Exception as e:
+        print(f"Error sending OTP email in background: {e}")
 
 
 def otp_request_view(request):
@@ -651,19 +665,14 @@ def otp_request_view(request):
             request.session['reset_otp_time'] = time.time()
             request.session['reset_otp_verified'] = False
 
-            # Send OTP via email
-            try:
-                send_mail(
-                    subject='Climatology Lab - Password Reset OTP',
-                    message=f'Your OTP for password reset is: {otp}\n\nThis code expires in 10 minutes.\n\nIf you did not request this, please ignore this email.',
-                    from_email=settings.DEFAULT_FROM_EMAIL,
-                    recipient_list=[email],
-                    fail_silently=False,
-                )
-                messages.info(request, f'A 6-digit OTP has been sent to {email}.')
-                return redirect('dashboard:otp_verify')
-            except OSError as e:
-                messages.error(request, 'Unable to send email at this time. The mail server is unreachable. Please contact the administrator.')
+            # Send OTP via email in background
+            threading.Thread(
+                target=send_otp_email_in_background,
+                args=(email, otp)
+            ).start()
+            
+            messages.info(request, f'A 6-digit OTP has been sent to {email}.')
+            return redirect('dashboard:otp_verify')
     else:
         form = OTPRequestForm()
     return render(request, 'dashboard/password_reset_form.html', {'form': form})

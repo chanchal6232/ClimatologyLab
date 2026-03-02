@@ -60,6 +60,39 @@
             /* Adjust for 2px border */
         }
 
+        /* Mobile Menu Toggle */
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+            z-index: 1002;
+        }
+
+        .mobile-menu-toggle .bar {
+            display: block;
+            width: 25px;
+            height: 3px;
+            margin: 5px auto;
+            transition: all 0.3s ease-in-out;
+            background-color: #0D3B66;
+            border-radius: 3px;
+        }
+
+        /* Hamburger Animation */
+        .mobile-menu-toggle.active .bar:nth-child(2) {
+            opacity: 0;
+        }
+
+        .mobile-menu-toggle.active .bar:nth-child(1) {
+            transform: translateY(8px) rotate(45deg);
+        }
+
+        .mobile-menu-toggle.active .bar:nth-child(3) {
+            transform: translateY(-8px) rotate(-45deg);
+        }
+
         /* === Shared Page Title Section (used on all content pages) === */
         .page-title-section {
             background: #fafafa;
@@ -83,6 +116,58 @@
             line-height: 1.6;
         }
 
+        @media (max-width: 968px) {
+            .mobile-menu-toggle {
+                display: block;
+            }
+
+            .nav-pill-container {
+                position: fixed;
+                top: 80px;
+                /* Adjust based on header height */
+                left: -100%;
+                width: 100%;
+                height: calc(100vh - 80px);
+                background: white;
+                flex-direction: column;
+                justify-content: flex-start;
+                padding: 20px;
+                transition: 0.4s ease-in-out;
+                z-index: 1001;
+                overflow-y: auto;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            }
+
+            .nav-pill-container.active {
+                left: 0;
+            }
+
+            .nav-pill {
+                flex-direction: column;
+                gap: 10px;
+                box-shadow: none;
+                border: none;
+                padding: 0;
+                width: 100%;
+            }
+
+            .nav-pill a {
+                width: 100%;
+                text-align: left;
+                padding: 15px 20px;
+                border-radius: 8px;
+            }
+
+            .nav-item-dropdown {
+                width: 100%;
+            }
+
+            .header-logos {
+                display: none;
+                /* Hide extra logos on mobile to save space */
+            }
+        }
+
         @media (max-width: 768px) {
             .page-title-section {
                 padding: 15px 0 10px;
@@ -103,12 +188,20 @@
             <!-- Left Logo -->
             <div class="logo">
                 <a href="{% url 'core:home' %}" style="text-decoration: none; display: flex; align-items: center;">
-                    <img src="{% static 'images/Picture1.png' %}" alt="Lab Logo" style="height: 65px; width: auto;">
+                    <img src="{% static 'images/Picture1.png' %}" alt="Lab Logo"
+                        style="height: 65px; width: auto; max-width: 250px;">
                 </a>
             </div>
 
+            <!-- Hamburger Menu Toggle -->
+            <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle Navigation">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
+
             <!-- Center Pill Navigation -->
-            <div class="nav-pill-container">
+            <div class="nav-pill-container" id="navPillContainer">
                 <nav class="nav-pill">
                     <div class="nav-item-dropdown" id="projectsDropdownWrapper">
                         <a href="#"
@@ -191,6 +284,31 @@
     <script src="{% static 'js/main.js' %}"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            // --- MOBILE MENU LOGIC ---
+            const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+            const navPillContainer = document.getElementById('navPillContainer');
+
+            if (mobileMenuToggle && navPillContainer) {
+                mobileMenuToggle.addEventListener('click', function () {
+                    this.classList.toggle('active');
+                    navPillContainer.classList.toggle('active');
+                    // Prevent body scroll when menu is open
+                    document.body.style.overflow = navPillContainer.classList.contains('active') ? 'hidden' : '';
+                });
+            }
+
+            // Close mobile menu when a direct link is clicked
+            const directLinks = document.querySelectorAll('.nav-pill > a');
+            directLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    if (window.innerWidth <= 968) {
+                        mobileMenuToggle.classList.remove('active');
+                        navPillContainer.classList.remove('active');
+                        document.body.style.overflow = '';
+                    }
+                });
+            });
+
             // --- DESKTOP HOVER LOGIC ---
             const dropdownWrappers = document.querySelectorAll('.nav-item-dropdown');
 
@@ -198,7 +316,7 @@
                 const trigger = wrapper.querySelector('.dropdown-trigger');
                 const menu = wrapper.querySelector('.dropdown-menu');
 
-                if (window.innerWidth > 768) {
+                if (window.innerWidth > 968) {
                     let closeTimer;
 
                     wrapper.addEventListener('mouseenter', () => {
@@ -218,13 +336,15 @@
                         }, 250); // Increased delay for stability
                     });
                 } else {
-                    // Mobile Click Logic
+                    // Mobile Click Logic (for <968px)
                     trigger.addEventListener('click', (e) => {
                         e.preventDefault();
                         e.stopPropagation();
                         const isOpen = menu.classList.contains('show');
                         document.querySelectorAll('.dropdown-menu').forEach(m => m.classList.remove('show'));
-                        if (!isOpen) menu.classList.add('show');
+                        if (!isOpen) {
+                            menu.classList.add('show');
+                        }
                     });
                 }
             });
@@ -235,7 +355,7 @@
             const confSubmenu = document.getElementById('confSubmenu');
 
             if (confWrapper && confTrigger && confSubmenu) {
-                if (window.innerWidth > 768) {
+                if (window.innerWidth > 968) {
                     let subTimer;
                     confWrapper.addEventListener('mouseenter', () => {
                         clearTimeout(subTimer);
@@ -257,7 +377,7 @@
 
             // --- GLOBAL CLOSE LOGIC ---
             document.addEventListener('click', (e) => {
-                if (window.innerWidth <= 768 && !e.target.closest('.nav-item-dropdown')) {
+                if (window.innerWidth <= 968 && !e.target.closest('.nav-item-dropdown') && !e.target.closest('.mobile-menu-toggle')) {
                     document.querySelectorAll('.dropdown-menu').forEach(m => m.classList.remove('show'));
                 }
             });
@@ -266,6 +386,11 @@
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'Escape') {
                     document.querySelectorAll('.dropdown-menu').forEach(m => m.classList.remove('show'));
+                    if (window.innerWidth <= 968) {
+                        mobileMenuToggle.classList.remove('active');
+                        navPillContainer.classList.remove('active');
+                        document.body.style.overflow = '';
+                    }
                 }
             });
         });
@@ -277,6 +402,18 @@
                 const href = this.getAttribute('href');
                 if (href.startsWith('#')) {
                     e.preventDefault();
+
+                    // Close mobile menu if open
+                    if (window.innerWidth <= 968) {
+                        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+                        const navPillContainer = document.getElementById('navPillContainer');
+                        if (mobileMenuToggle && navPillContainer) {
+                            mobileMenuToggle.classList.remove('active');
+                            navPillContainer.classList.remove('active');
+                            document.body.style.overflow = '';
+                        }
+                    }
+
                     const footer = document.querySelector('#footer');
                     if (footer) {
                         footer.scrollIntoView({ behavior: 'smooth', block: 'start' });
