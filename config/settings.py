@@ -167,8 +167,7 @@ AWS_S3_SIGNATURE_VERSION = "s3v4"
 AWS_S3_ADDRESSING_STYLE = "path"
 AWS_S3_CHECKSUM_MODE = "DISABLED"
 
-# CRITICAL: Disable internal AWS metadata checks (prevents 1-minute hangs on Render)
-os.environ["AWS_EC2_METADATA_DISABLED"] = "true"
+# NOTE: AWS_EC2_METADATA_DISABLED removed — not needed on real EC2 instances
 
 
 # Generate Supabase public URL domain
