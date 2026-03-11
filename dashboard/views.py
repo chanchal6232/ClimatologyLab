@@ -27,6 +27,37 @@ from .resources import (
 )
 from django.http import HttpResponse
 from tablib import Dataset
+from django.apps import apps
+
+@staff_member_required(login_url='/accounts/login/')
+def bulk_delete(request):
+    """Generic view to handle bulk deletion from any dashboard list view."""
+    if request.method == 'POST':
+        app_label = request.POST.get('app_label')
+        model_name = request.POST.get('model_name')
+        item_ids = request.POST.getlist('item_ids')
+        redirect_url = request.POST.get('next', 'dashboard:home')
+        
+        if app_label and model_name and item_ids:
+            try:
+                model = apps.get_model(app_label, model_name)
+                # Check basic delete permission
+                perm = f"{app_label}.delete_{model_name.lower()}"
+                if not request.user.has_perm(perm) and not request.user.is_superuser:
+                    messages.error(request, "You do not have permission to delete these items.")
+                    return redirect(redirect_url)
+                    
+                deleted_count, _ = model.objects.filter(id__in=item_ids).delete()
+                messages.success(request, f"Successfully deleted {deleted_count} item(s).")
+            except LookupError:
+                messages.error(request, "Invalid model specified for deletion.")
+            except Exception as e:
+                messages.error(request, f"Error deleting items: {e}")
+        else:
+            messages.warning(request, "No items selected for deletion.")
+            
+        return redirect(redirect_url)
+    return redirect('dashboard:home')
 
 # --- IMPACT CRUD ---
 

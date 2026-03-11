@@ -11,6 +11,9 @@ urlpatterns = [
     # Supabase diagnostic (staff only)
     path('supabase-diagnostic/', views.supabase_test, name='supabase_test'),
 
+    # Bulk Delete
+    path('bulk-delete/', views.bulk_delete, name='bulk_delete'),
+
     # Projects CRUD
     path('projects/', views.projects_list, name='projects_list'),
     path('projects/add/', views.project_create, name='project_create'),

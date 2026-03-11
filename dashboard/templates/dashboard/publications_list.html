@@ -29,6 +29,10 @@
                                 class="bi bi-file-earmark-excel me-2"></i>Excel</a></li>
                 </ul>
             </div>
+            <button type="submit" form="bulkDeleteForm" class="btn btn-danger btn-sm d-flex align-items-center gap-2"
+                onclick="return confirm('Are you sure you want to delete the selected publications?');">
+                <i class="bi bi-trash"></i> Delete Selected
+            </button>
             <a href="{% url 'dashboard:publication_create' %}"
                 class="btn btn-primary btn-sm d-flex align-items-center gap-2">
                 <i class="bi bi-plus-lg"></i> Add New Publication
@@ -36,69 +40,99 @@
         </div>
     </div>
 
-    <div class="table-responsive">
-        <table class="table table-hover align-middle border-top">
-            <thead class="table-light">
-                <tr>
-                    <th>Title / Authors</th>
-                    <th>Category</th>
-                    <th>Date</th>
-                    <th>Status</th>
-                    <th class="text-end">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for pub in publications %}
-                <tr>
-                    <td>
-                        <div class="fw-600 text-dark">{{ pub.title|truncatechars:100 }}</div>
-                        <small class="text-muted">{{ pub.authors|truncatechars:80 }}</small>
-                    </td>
-                    <td>
-                        <span class="badge bg-info-subtle text-info border border-info-subtle rounded-pill">
-                            {{ pub.get_category_display }}
-                        </span>
-                    </td>
-                    <td>{{ pub.publication_date|date:"b d, Y" }}</td>
-                    <td>
-                        {% if pub.is_active %}
-                        <span
-                            class="badge bg-success-subtle text-success border border-success-subtle rounded-pill">Active</span>
-                        {% else %}
-                        <span
-                            class="badge bg-warning-subtle text-warning border border-warning-subtle rounded-pill">Hidden</span>
-                        {% endif %}
-                        {% if pub.is_featured %}
-                        <span
-                            class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill">Featured</span>
-                        {% endif %}
-                    </td>
-                    <td class="text-end">
-                        <div class="btn-group">
-                            <a href="{% url 'dashboard:publication_edit' pub.pk %}"
-                                class="btn btn-sm btn-outline-secondary" title="Edit">
-                                <i class="bi bi-pencil"></i>
-                            </a>
-                            <form action="{% url 'dashboard:publication_delete' pub.pk %}" method="post"
-                                class="d-inline" onsubmit="return confirm('Delete this publication?');">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete">
+    <form id="bulkDeleteForm" action="{% url 'dashboard:bulk_delete' %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="app_label" value="publications">
+        <input type="hidden" name="model_name" value="Publication">
+        <input type="hidden" name="next" value="{{ request.get_full_path }}">
+
+        <div class="table-responsive">
+            <table class="table table-hover align-middle border-top">
+                <thead class="table-light">
+                    <tr>
+                        <th style="width: 40px;"><input type="checkbox" class="form-check-input" id="selectAll"></th>
+                        <th>Title / Authors</th>
+                        <th>Category</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for pub in publications %}
+                    <tr>
+                        <td><input type="checkbox" class="form-check-input item-checkbox" name="item_ids"
+                                value="{{ pub.pk }}"></td>
+                        <td>
+                            <div class="fw-600 text-dark">{{ pub.title|truncatechars:100 }}</div>
+                            <small class="text-muted">{{ pub.authors|truncatechars:80 }}</small>
+                        </td>
+                        <td>
+                            <span class="badge bg-info-subtle text-info border border-info-subtle rounded-pill">
+                                {{ pub.get_category_display }}
+                            </span>
+                        </td>
+                        <td>{{ pub.publication_date|date:"b d, Y" }}</td>
+                        <td>
+                            {% if pub.is_active %}
+                            <span
+                                class="badge bg-success-subtle text-success border border-success-subtle rounded-pill">Active</span>
+                            {% else %}
+                            <span
+                                class="badge bg-warning-subtle text-warning border border-warning-subtle rounded-pill">Hidden</span>
+                            {% endif %}
+                            {% if pub.is_featured %}
+                            <span
+                                class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill">Featured</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-end">
+                            <div class="btn-group">
+                                <a href="{% url 'dashboard:publication_edit' pub.pk %}"
+                                    class="btn btn-sm btn-outline-secondary" title="Edit">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <a href="{% url 'dashboard:publication_delete' pub.pk %}"
+                                    class="btn btn-sm btn-outline-danger" title="Delete"
+                                    onclick="event.preventDefault(); if(confirm('Delete this publication?')) { document.getElementById('delete-form-{{ pub.pk }}').submit(); }">
                                     <i class="bi bi-trash"></i>
-                                </button>
-                            </form>
-                        </div>
-                    </td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="5" class="text-center py-5">
-                        <i class="bi bi-files fs-1 text-muted d-block mb-3"></i>
-                        <p class="text-muted">No publications found.</p>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center py-5">
+                            <i class="bi bi-files fs-1 text-muted d-block mb-3"></i>
+                            <p class="text-muted">No publications found.</p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </form>
+
+    {% for pub in publications %}
+    <form id="delete-form-{{ pub.pk }}" action="{% url 'dashboard:publication_delete' pub.pk %}" method="post"
+        class="d-none">
+        {% csrf_token %}
+    </form>
+    {% endfor %}
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const selectAll = document.getElementById('selectAll');
+        const checkboxes = document.querySelectorAll('.item-checkbox');
+
+        if (selectAll) {
+            selectAll.addEventListener('change', function () {
+                checkboxes.forEach(cb => {
+                    cb.checked = selectAll.checked;
+                });
+            });
+        }
+    });
+</script>
 {% endblock %}

@@ -26,102 +26,148 @@
                     <li><a class="dropdown-item" href="{% url 'dashboard:export_data' 'projects' %}?format=xlsx"><i
                                 class="bi bi-file-earmark-excel me-2"></i>Excel</a></li>
                 </ul>
+                <button type="submit" form="bulkDeleteForm"
+                    class="btn btn-danger btn-sm d-flex align-items-center gap-2"
+                    onclick="return confirm('Are you sure you want to delete the selected projects?');">
+                    <i class="bi bi-trash"></i> Delete Selected
+                </button>
+                <a href="{% url 'dashboard:project_create' %}" </div>
+                    <button type="submit" form="bulkDeleteForm"
+                        class="btn btn-danger btn-sm d-flex align-items-center gap-2"
+                        onclick="return confirm('Are you sure you want to delete the selected projects?');">
+                        <i class="bi bi-trash"></i> Delete Selected
+                    </button>
+                    <a href="{% url 'dashboard:project_create' %}"
+                        class="btn btn-primary d-flex align-items-center gap-2 px-4 btn-sm">
+                        <i class="bi bi-plus-lg"></i> Add New Project
+                    </a>
             </div>
-            <a href="{% url 'dashboard:project_create' %}"
-                class="btn btn-primary d-flex align-items-center gap-2 px-4 btn-sm">
-                <i class="bi bi-plus-lg"></i> Add New Project
-            </a>
         </div>
+
+        <form id="bulkDeleteForm" action="{% url 'dashboard:bulk_delete' %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="app_label" value="projects">
+            <input type="hidden" name="model_name" value="ResearchProject">
+            <input type="hidden" name="next" value="{{ request.get_full_path }}">
+
+            <div class="table-responsive">
+                <table class="table table-hover align-middle border-top">
+                    <thead class="table-light">
+                        <tr>
+                            <th style="width: 40px;"><input type="checkbox" class="form-check-input" id="selectAll">
+                            </th>
+                            <th style="width: 80px;">Image</th>
+                            <th>Project Details</th>
+                            <th>Type</th>
+                            <th>Status</th>
+                            <th>Timeline</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for project in projects %}
+                        <tr>
+                            <td><input type="checkbox" class="form-check-input item-checkbox" name="item_ids"
+                                    value="{{ project.pk }}"></td>
+                            <td>
+                                {% if project.image %}
+                                <img src="{{ project.image.url }}" class="rounded shadow-sm"
+                                    style="width: 50px; height: 50px; object-fit: cover;">
+                                {% else %}
+                                <div class="bg-light rounded d-flex align-items-center justify-content-center border"
+                                    style="width: 50px; height: 50px;">
+                                    <i class="bi bi-image text-muted"></i>
+                                </div>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="fw-600 text-dark">{{ project.title|truncatechars:80 }}</div>
+                                <div class="small text-muted mb-1">{{ project.description|truncatechars:100 }}</div>
+                                {% if project.funding_agency %}
+                                <span class="small text-primary"><i class="bi bi-bank me-1"></i>{{
+                                    project.funding_agency|truncatechars:40 }}</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <span class="badge rounded-pill bg-light text-dark border fw-500">
+                                    {{ project.get_project_type_display }}
+                                </span>
+                            </td>
+                            <td>
+                                {% if project.status == 'ongoing' %}
+                                <span
+                                    class="badge rounded-pill bg-success-subtle text-success border border-success-subtle">Ongoing</span>
+                                {% elif project.status == 'completed' %}
+                                <span
+                                    class="badge rounded-pill bg-primary-subtle text-primary border border-primary-subtle">Completed</span>
+                                {% else %}
+                                <span
+                                    class="badge rounded-pill bg-warning-subtle text-warning border border-warning-subtle">Upcoming</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="small fw-500">{% if project.start_date %}{{ project.start_date|date:"M Y"
+                                    }}{%
+                                    else
+                                    %}-{% endif %}</div>
+                                <div class="small text-muted">to {% if project.end_date %}{{ project.end_date|date:"M Y"
+                                    }}{%
+                                    else %}Present{% endif %}</div>
+                            </td>
+                            <td class="text-end">
+                                <div class="btn-group">
+                                    <a href="{% url 'dashboard:project_edit' project.pk %}"
+                                        class="btn btn-sm btn-outline-secondary px-3" title="Edit">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <a href="{% url 'dashboard:project_delete' project.pk %}"
+                                        class="btn btn-sm btn-outline-danger px-3" title="Delete"
+                                        onclick="event.preventDefault(); if(confirm('Permanently delete this project?')) { document.getElementById('delete-form-{{ project.pk }}').submit(); }">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="7" class="text-center py-5">
+                                <div class="mb-3 text-muted">
+                                    <i class="bi bi-journal-x" style="font-size: 3rem;"></i>
+                                </div>
+                                <h6 class="fw-700">No Projects Found</h6>
+                                <p class="text-muted small">Start by adding your first research or consultancy project.
+                                </p>
+                                <a href="{% url 'dashboard:project_create' %}" class="btn btn-sm btn-primary mt-2">Add
+                                    New
+                                    Project</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </form>
+
+        {% for project in projects %}
+        <form id="delete-form-{{ project.pk }}" action="{% url 'dashboard:project_delete' project.pk %}" method="post"
+            class="d-none">
+            {% csrf_token %}
+        </form>
+        {% endfor %}
     </div>
 
-    <div class="table-responsive">
-        <table class="table table-hover align-middle border-top">
-            <thead class="table-light">
-                <tr>
-                    <th style="width: 80px;">Image</th>
-                    <th>Project Details</th>
-                    <th>Type</th>
-                    <th>Status</th>
-                    <th>Timeline</th>
-                    <th class="text-end">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for project in projects %}
-                <tr>
-                    <td>
-                        {% if project.image %}
-                        <img src="{{ project.image.url }}" class="rounded shadow-sm"
-                            style="width: 50px; height: 50px; object-fit: cover;">
-                        {% else %}
-                        <div class="bg-light rounded d-flex align-items-center justify-content-center border"
-                            style="width: 50px; height: 50px;">
-                            <i class="bi bi-image text-muted"></i>
-                        </div>
-                        {% endif %}
-                    </td>
-                    <td>
-                        <div class="fw-600 text-dark">{{ project.title|truncatechars:80 }}</div>
-                        <div class="small text-muted mb-1">{{ project.description|truncatechars:100 }}</div>
-                        {% if project.funding_agency %}
-                        <span class="small text-primary"><i class="bi bi-bank me-1"></i>{{
-                            project.funding_agency|truncatechars:40 }}</span>
-                        {% endif %}
-                    </td>
-                    <td>
-                        <span class="badge rounded-pill bg-light text-dark border fw-500">
-                            {{ project.get_project_type_display }}
-                        </span>
-                    </td>
-                    <td>
-                        {% if project.status == 'ongoing' %}
-                        <span
-                            class="badge rounded-pill bg-success-subtle text-success border border-success-subtle">Ongoing</span>
-                        {% elif project.status == 'completed' %}
-                        <span
-                            class="badge rounded-pill bg-primary-subtle text-primary border border-primary-subtle">Completed</span>
-                        {% else %}
-                        <span
-                            class="badge rounded-pill bg-warning-subtle text-warning border border-warning-subtle">Upcoming</span>
-                        {% endif %}
-                    </td>
-                    <td>
-                        <div class="small fw-500">{% if project.start_date %}{{ project.start_date|date:"M Y" }}{% else
-                            %}-{% endif %}</div>
-                        <div class="small text-muted">to {% if project.end_date %}{{ project.end_date|date:"M Y" }}{%
-                            else %}Present{% endif %}</div>
-                    </td>
-                    <td class="text-end">
-                        <div class="btn-group">
-                            <a href="{% url 'dashboard:project_edit' project.pk %}"
-                                class="btn btn-sm btn-outline-secondary px-3" title="Edit">
-                                <i class="bi bi-pencil"></i>
-                            </a>
-                            <form action="{% url 'dashboard:project_delete' project.pk %}" method="post"
-                                class="d-inline" onsubmit="return confirm('Permanently delete this project?');">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-sm btn-outline-danger px-3" title="Delete">
-                                    <i class="bi bi-trash"></i>
-                                </button>
-                            </form>
-                        </div>
-                    </td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="6" class="text-center py-5">
-                        <div class="mb-3 text-muted">
-                            <i class="bi bi-journal-x" style="font-size: 3rem;"></i>
-                        </div>
-                        <h6 class="fw-700">No Projects Found</h6>
-                        <p class="text-muted small">Start by adding your first research or consultancy project.</p>
-                        <a href="{% url 'dashboard:project_create' %}" class="btn btn-sm btn-primary mt-2">Add New
-                            Project</a>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-</div>
-{% endblock %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const selectAll = document.getElementById('selectAll');
+            const checkboxes = document.querySelectorAll('.item-checkbox');
+
+            if (selectAll) {
+                selectAll.addEventListener('change', function () {
+                    checkboxes.forEach(cb => {
+                        cb.checked = selectAll.checked;
+                    });
+                });
+            }
+        });
+    </script>
+    {% endblock %}

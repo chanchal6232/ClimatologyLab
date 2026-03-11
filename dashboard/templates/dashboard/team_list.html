@@ -26,79 +26,121 @@
                     <li><a class="dropdown-item" href="{% url 'dashboard:export_data' 'team' %}?format=xlsx"><i
                                 class="bi bi-file-earmark-excel me-2"></i>Excel</a></li>
                 </ul>
+                <button type="submit" form="bulkDeleteForm"
+                    class="btn btn-danger btn-sm d-flex align-items-center gap-2"
+                    onclick="return confirm('Are you sure you want to delete the selected members?');">
+                    <i class="bi bi-trash"></i> Delete Selected
+                </button>
+                <a href="{% url 'dashboard:team_create' %}" </div>
+                    <button type="submit" form="bulkDeleteForm"
+                        class="btn btn-danger btn-sm d-flex align-items-center gap-2"
+                        onclick="return confirm('Are you sure you want to delete the selected members?');">
+                        <i class="bi bi-trash"></i> Delete Selected
+                    </button>
+                    <a href="{% url 'dashboard:team_create' %}"
+                        class="btn btn-primary btn-sm d-flex align-items-center gap-1">
+                        <i class="bi bi-person-plus"></i> Add Member
+                    </a>
             </div>
-            <a href="{% url 'dashboard:team_create' %}" class="btn btn-primary btn-sm d-flex align-items-center gap-1">
-                <i class="bi bi-person-plus"></i> Add Member
-            </a>
         </div>
+
+        <form id="bulkDeleteForm" action="{% url 'dashboard:bulk_delete' %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="app_label" value="team">
+            <input type="hidden" name="model_name" value="TeamMember">
+            <input type="hidden" name="next" value="{{ request.get_full_path }}">
+
+            <div class="table-responsive">
+                <table class="table table-hover align-middle border-top">
+                    <thead class="table-light">
+                        <tr>
+                            <th style="width: 40px;"><input type="checkbox" class="form-check-input" id="selectAll">
+                            </th>
+                            <th>Photo</th>
+                            <th>Name / Email</th>
+                            <th>Role</th>
+                            <th>Order</th>
+                            <th>Status</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for member in members %}
+                        <tr>
+                            <td><input type="checkbox" class="form-check-input item-checkbox" name="item_ids"
+                                    value="{{ member.pk }}"></td>
+                            <td>
+                                {% if member.photo %}
+                                <img src="{{ member.photo.url }}" class="rounded-circle shadow-sm"
+                                    style="width: 40px; height: 40px; object-fit: cover;">
+                                {% else %}
+                                <div class="bg-secondary bg-opacity-10 text-secondary rounded-circle d-flex align-items-center justify-content-center"
+                                    style="width: 40px; height: 40px;">
+                                    <i class="bi bi-person"></i>
+                                </div>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="fw-600">{{ member.name }}</div>
+                                <div class="small text-muted">{{ member.email|default:"No email" }}</div>
+                            </td>
+                            <td><span class="small">{{ member.role }}</span></td>
+                            <td>{{ member.order }}</td>
+                            <td>
+                                {% if member.is_active %}
+                                <span
+                                    class="badge bg-success-subtle text-success border border-success-subtle rounded-pill">Active</span>
+                                {% else %}
+                                <span
+                                    class="badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill">Hidden</span>
+                                {% endif %}
+                            </td>
+                            <td class="text-end">
+                                <div class="btn-group">
+                                    <a href="{% url 'dashboard:team_edit' member.pk %}"
+                                        class="btn btn-sm btn-outline-secondary" title="Edit">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <a href="{% url 'dashboard:team_delete' member.pk %}"
+                                        class="btn btn-sm btn-outline-danger" title="Delete"
+                                        onclick="event.preventDefault(); if(confirm('Remove this team member?')) { document.getElementById('delete-form-{{ member.pk }}').submit(); }">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="7" class="text-center py-5">
+                                <p class="text-muted">No members found.</p>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </form>
+
+        {% for member in members %}
+        <form id="delete-form-{{ member.pk }}" action="{% url 'dashboard:team_delete' member.pk %}" method="post"
+            class="d-none">
+            {% csrf_token %}
+        </form>
+        {% endfor %}
     </div>
 
-    <div class="table-responsive">
-        <table class="table table-hover align-middle border-top">
-            <thead class="table-light">
-                <tr>
-                    <th>Photo</th>
-                    <th>Name / Email</th>
-                    <th>Role</th>
-                    <th>Order</th>
-                    <th>Status</th>
-                    <th class="text-end">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for member in members %}
-                <tr>
-                    <td>
-                        {% if member.photo %}
-                        <img src="{{ member.photo.url }}" class="rounded-circle shadow-sm"
-                            style="width: 40px; height: 40px; object-fit: cover;">
-                        {% else %}
-                        <div class="bg-secondary bg-opacity-10 text-secondary rounded-circle d-flex align-items-center justify-content-center"
-                            style="width: 40px; height: 40px;">
-                            <i class="bi bi-person"></i>
-                        </div>
-                        {% endif %}
-                    </td>
-                    <td>
-                        <div class="fw-600">{{ member.name }}</div>
-                        <div class="small text-muted">{{ member.email|default:"No email" }}</div>
-                    </td>
-                    <td><span class="small">{{ member.role }}</span></td>
-                    <td>{{ member.order }}</td>
-                    <td>
-                        {% if member.is_active %}
-                        <span
-                            class="badge bg-success-subtle text-success border border-success-subtle rounded-pill">Active</span>
-                        {% else %}
-                        <span
-                            class="badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill">Hidden</span>
-                        {% endif %}
-                    </td>
-                    <td class="text-end">
-                        <div class="btn-group">
-                            <a href="{% url 'dashboard:team_edit' member.pk %}" class="btn btn-sm btn-outline-secondary"
-                                title="Edit">
-                                <i class="bi bi-pencil"></i>
-                            </a>
-                            <form action="{% url 'dashboard:team_delete' member.pk %}" method="post" class="d-inline"
-                                onsubmit="return confirm('Remove this team member?');">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete">
-                                    <i class="bi bi-trash"></i>
-                                </button>
-                            </form>
-                        </div>
-                    </td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="6" class="text-center py-5">
-                        <p class="text-muted">No members found.</p>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-</div>
-{% endblock %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const selectAll = document.getElementById('selectAll');
+            const checkboxes = document.querySelectorAll('.item-checkbox');
+
+            if (selectAll) {
+                selectAll.addEventListener('change', function () {
+                    checkboxes.forEach(cb => {
+                        cb.checked = selectAll.checked;
+                    });
+                });
+            }
+        });
+    </script>
+    {% endblock %}

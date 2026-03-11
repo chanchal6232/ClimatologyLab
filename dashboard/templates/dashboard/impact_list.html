@@ -23,62 +23,97 @@
                                 class="bi bi-file-earmark-excel me-2"></i>Excel</a></li>
                 </ul>
             </div>
+            <button type="submit" form="bulkDeleteForm" class="btn btn-danger btn-sm d-flex align-items-center gap-2"
+                onclick="return confirm('Are you sure you want to delete the selected stories?');">
+                <i class="bi bi-trash"></i> Delete Selected
+            </button>
             <a href="{% url 'dashboard:impact_story_create' %}" class="btn btn-primary btn-sm">
                 <i class="bi bi-plus-lg"></i> Add Story
             </a>
         </div>
     </div>
 
-    <div class="table-responsive">
-        <table class="table table-hover align-middle border-top">
-            <thead class="table-light">
-                <tr>
-                    <th>Title</th>
-                    <th>Category</th>
-                    <th>Metrics</th>
-                    <th>Status</th>
-                    <th class="text-end">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for story in stories %}
-                <tr>
-                    <td>
-                        <div class="fw-600">{{ story.title }}</div>
-                        <div class="small text-muted">{{ story.description|truncatechars:60 }}</div>
-                    </td>
-                    <td><span class="badge bg-info-subtle text-info border border-info-subtle rounded-pill">{{
-                            story.category }}</span></td>
-                    <td>{{ story.impact_metrics }}</td>
-                    <td>
-                        {% if story.is_active %}
-                        <span
-                            class="badge bg-success-subtle text-success border border-success-subtle rounded-pill">Active</span>
-                        {% else %}
-                        <span
-                            class="badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill">Hidden</span>
-                        {% endif %}
-                    </td>
-                    <td class="text-end">
-                        <div class="btn-group">
-                            <a href="{% url 'dashboard:impact_story_edit' story.pk %}"
-                                class="btn btn-sm btn-outline-secondary"><i class="bi bi-pencil"></i></a>
-                            <form action="{% url 'dashboard:impact_story_delete' story.pk %}" method="post"
-                                class="d-inline" onsubmit="return confirm('Delete this story?');">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-sm btn-outline-danger"><i
-                                        class="bi bi-trash"></i></button>
-                            </form>
-                        </div>
-                    </td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="5" class="text-center py-4 text-muted">No impact stories found.</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
+    <form id="bulkDeleteForm" action="{% url 'dashboard:bulk_delete' %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="app_label" value="core">
+        <input type="hidden" name="model_name" value="ImpactStory">
+        <input type="hidden" name="next" value="{{ request.get_full_path }}">
+
+        <div class="table-responsive">
+            <table class="table table-hover align-middle border-top">
+                <thead class="table-light">
+                    <tr>
+                        <th style="width: 40px;"><input type="checkbox" class="form-check-input" id="selectAll"></th>
+                        <th>Title</th>
+                        <th>Category</th>
+                        <th>Metrics</th>
+                        <th>Status</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for story in stories %}
+                    <tr>
+                        <td><input type="checkbox" class="form-check-input item-checkbox" name="item_ids"
+                                value="{{ story.pk }}"></td>
+                        <td>
+                            <div class="fw-600">{{ story.title }}</div>
+                            <div class="small text-muted">{{ story.description|truncatechars:60 }}</div>
+                        </td>
+                        <td><span class="badge bg-info-subtle text-info border border-info-subtle rounded-pill">{{
+                                story.category }}</span></td>
+                        <td>{{ story.impact_metrics }}</td>
+                        <td>
+                            {% if story.is_active %}
+                            <span
+                                class="badge bg-success-subtle text-success border border-success-subtle rounded-pill">Active</span>
+                            {% else %}
+                            <span
+                                class="badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill">Hidden</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-end">
+                            <div class="btn-group">
+                                <a href="{% url 'dashboard:impact_story_edit' story.pk %}"
+                                    class="btn btn-sm btn-outline-secondary"><i class="bi bi-pencil"></i></a>
+                                <a href="{% url 'dashboard:impact_story_delete' story.pk %}"
+                                    class="btn btn-sm btn-outline-danger" title="Delete"
+                                    onclick="event.preventDefault(); if(confirm('Delete this story?')) { document.getElementById('delete-form-{{ story.pk }}').submit(); }">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center py-4 text-muted">No impact stories found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </form>
+
+    {% for story in stories %}
+    <form id="delete-form-{{ story.pk }}" action="{% url 'dashboard:impact_story_delete' story.pk %}" method="post"
+        class="d-none">
+        {% csrf_token %}
+    </form>
+    {% endfor %}
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const selectAll = document.getElementById('selectAll');
+        const checkboxes = document.querySelectorAll('.item-checkbox');
+
+        if (selectAll) {
+            selectAll.addEventListener('change', function () {
+                checkboxes.forEach(cb => {
+                    cb.checked = selectAll.checked;
+                });
+            });
+        }
+    });
+</script>
 {% endblock %}

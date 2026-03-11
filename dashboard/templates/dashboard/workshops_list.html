@@ -27,6 +27,10 @@
                                 class="bi bi-file-earmark-excel me-2"></i>Excel</a></li>
                 </ul>
             </div>
+            <button type="submit" form="bulkDeleteForm" class="btn btn-danger btn-sm d-flex align-items-center gap-2"
+                onclick="return confirm('Are you sure you want to delete the selected workshops?');">
+                <i class="bi bi-trash"></i> Delete Selected
+            </button>
             <a href="{% url 'dashboard:workshop_create' %}"
                 class="btn btn-primary btn-sm d-flex align-items-center gap-1">
                 <i class="bi bi-calendar-plus"></i> Add Workshop
@@ -34,58 +38,88 @@
         </div>
     </div>
 
-    <div class="table-responsive">
-        <table class="table table-hover align-middle border-top">
-            <thead class="table-light">
-                <tr>
-                    <th>Title</th>
-                    <th>Event Date</th>
-                    <th>Status</th>
-                    <th class="text-end">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for workshop in workshops %}
-                <tr>
-                    <td>
-                        <div class="fw-600">{{ workshop.title }}</div>
-                        <div class="small text-muted">{{ workshop.description|truncatechars:80 }}</div>
-                    </td>
-                    <td>{{ workshop.event_date|date:"b d, Y" }}</td>
-                    <td>
-                        {% if workshop.is_active %}
-                        <span
-                            class="badge bg-success-subtle text-success border border-success-subtle rounded-pill">Active</span>
-                        {% else %}
-                        <span
-                            class="badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill">Hidden</span>
-                        {% endif %}
-                    </td>
-                    <td class="text-end">
-                        <div class="btn-group">
-                            <a href="{% url 'dashboard:workshop_edit' workshop.pk %}"
-                                class="btn btn-sm btn-outline-secondary" title="Edit">
-                                <i class="bi bi-pencil"></i>
-                            </a>
-                            <form action="{% url 'dashboard:workshop_delete' workshop.pk %}" method="post"
-                                class="d-inline" onsubmit="return confirm('Delete this workshop?');">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete">
+    <form id="bulkDeleteForm" action="{% url 'dashboard:bulk_delete' %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="app_label" value="workshops">
+        <input type="hidden" name="model_name" value="Workshop">
+        <input type="hidden" name="next" value="{{ request.get_full_path }}">
+
+        <div class="table-responsive">
+            <table class="table table-hover align-middle border-top">
+                <thead class="table-light">
+                    <tr>
+                        <th style="width: 40px;"><input type="checkbox" class="form-check-input" id="selectAll"></th>
+                        <th>Title</th>
+                        <th>Event Date</th>
+                        <th>Status</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for workshop in workshops %}
+                    <tr>
+                        <td><input type="checkbox" class="form-check-input item-checkbox" name="item_ids"
+                                value="{{ workshop.pk }}"></td>
+                        <td>
+                            <div class="fw-600">{{ workshop.title }}</div>
+                            <div class="small text-muted">{{ workshop.description|truncatechars:80 }}</div>
+                        </td>
+                        <td>{{ workshop.event_date|date:"b d, Y" }}</td>
+                        <td>
+                            {% if workshop.is_active %}
+                            <span
+                                class="badge bg-success-subtle text-success border border-success-subtle rounded-pill">Active</span>
+                            {% else %}
+                            <span
+                                class="badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill">Hidden</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-end">
+                            <div class="btn-group">
+                                <a href="{% url 'dashboard:workshop_edit' workshop.pk %}"
+                                    class="btn btn-sm btn-outline-secondary" title="Edit">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <a href="{% url 'dashboard:workshop_delete' workshop.pk %}"
+                                    class="btn btn-sm btn-outline-danger" title="Delete"
+                                    onclick="event.preventDefault(); if(confirm('Delete this workshop?')) { document.getElementById('delete-form-{{ workshop.pk }}').submit(); }">
                                     <i class="bi bi-trash"></i>
-                                </button>
-                            </form>
-                        </div>
-                    </td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="4" class="text-center py-5">
-                        <p class="text-muted">No workshops found.</p>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center py-5">
+                            <p class="text-muted">No workshops found.</p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </form>
+
+    {% for workshop in workshops %}
+    <form id="delete-form-{{ workshop.pk }}" action="{% url 'dashboard:workshop_delete' workshop.pk %}" method="post"
+        class="d-none">
+        {% csrf_token %}
+    </form>
+    {% endfor %}
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const selectAll = document.getElementById('selectAll');
+        const checkboxes = document.querySelectorAll('.item-checkbox');
+
+        if (selectAll) {
+            selectAll.addEventListener('change', function () {
+                checkboxes.forEach(cb => {
+                    cb.checked = selectAll.checked;
+                });
+            });
+        }
+    });
+</script>
 {% endblock %}
