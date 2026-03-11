@@ -640,35 +640,23 @@ from django.conf import settings
 from django.contrib.auth.models import User
 
 def send_otp_email_in_background(email, otp):
-    """Sends the OTP email via Resend API in a background thread."""
+    """Sends the OTP email via Django SMTP backend (AWS SES) in a background thread."""
     try:
-        import resend
+        from django.core.mail import EmailMessage, get_connection
         from django.conf import settings
-        
-        resend.api_key = getattr(settings, "RESEND_API_KEY", "")
-        if not resend.api_key:
-            from django.core.mail import EmailMessage, get_connection
-            # Fallback to local console/SMTP if testing without Resend API key config
-            connection = get_connection()
-            msg = EmailMessage(
-                subject='Climatology Lab - Password Reset OTP',
-                body=f'Your OTP for password reset is: {otp}\n\nThis code expires in 10 minutes.\n\nIf you did not request this, please ignore this email.',
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                to=[email],
-                connection=connection,
-            )
-            msg.send(fail_silently=False)
-            connection.close()
-            return
 
-        resend.Emails.send({
-            "from": settings.DEFAULT_FROM_EMAIL,
-            "to": [email],
-            "subject": "Climatology Lab - Password Reset OTP",
-            "text": f"Your OTP for password reset is: {otp}\n\nThis code expires in 10 minutes.\n\nIf you did not request this, please ignore this email.",
-        })
+        connection = get_connection()
+        msg = EmailMessage(
+            subject='Climatology Lab - Password Reset OTP',
+            body=f'Your OTP for password reset is: {otp}\n\nThis code expires in 10 minutes.\n\nIf you did not request this, please ignore this email.',
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            to=[email],
+            connection=connection,
+        )
+        msg.send(fail_silently=False)
+        connection.close()
     except Exception as e:
-        print(f"Error sending OTP email via Resend in background: {e}")
+        print(f"Error sending OTP email via SMTP: {e}")
 
 
 def otp_request_view(request):

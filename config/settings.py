@@ -218,15 +218,16 @@ CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 # ============================================
-# EMAIL CONFIGURATION - API Relay (Resend)
+# EMAIL CONFIGURATION - AWS SES (SMTP)
 # ============================================
-# NOTE: Removed SMTP backend because Render free tier blocks outbound ports 465/587.
-# We are routing via the Resend Python API.
-
-RESEND_API_KEY = os.getenv("RESEND_API_KEY", "")
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = os.getenv("EMAIL_HOST", "email-smtp.ap-south-1.amazonaws.com")
+EMAIL_PORT = int(os.getenv("EMAIL_PORT", "587"))
+EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS", "True") == "True"
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER", "")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", "")
 
 # Sender and Admin Emails
-# Note: In Resend, your DEFAULT_FROM_EMAIL domain must be verified in the Resend dashboard.
 DEFAULT_FROM_EMAIL = os.getenv(
     "DEFAULT_FROM_EMAIL", "Climatology Lab <noreply-climatologylab@iitr.ac.in>"
 )
