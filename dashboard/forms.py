@@ -133,12 +133,8 @@ class OTPRequestForm(forms.Form):
 
     def clean_email(self):
         email = self.cleaned_data.get('email')
-        from django.contrib.auth.models import User
-        
-        # Check if any active user exists with this email
-        if not User.objects.filter(email=email, is_active=True).exists():
-            raise ValidationError("No active account found with this email address.")
-        
+        if email != 'climatologylab@ar.iitr.ac.in':
+            raise ValidationError("Password reset is only allowed for the official lab email.")
         return email
 
 
