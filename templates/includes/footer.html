@@ -92,21 +92,21 @@
 
 <style>
     .footer {
-        height: calc(100vh - 100px);
-        /* accounting for navbar height */
+        min-height: 100vh;
+        height: auto;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
         background-color: #0d3b66;
         color: #ffffff;
-        overflow: hidden;
+        padding-top: 40px;
     }
 
     .footer-main {
         flex: 1;
         display: flex;
         align-items: center;
-        padding: 5px 0;
+        padding: 20px 0;
     }
 
     .footer-content-grid-new {
@@ -202,7 +202,8 @@
     .contact-form {
         display: flex;
         flex-direction: column;
-        gap: 12px;
+        gap: 15px;
+        width: 100%;
     }
 
     .form-group {
@@ -231,8 +232,8 @@
     }
 
     .form-group textarea {
-        min-height: 80px;
-        resize: vertical;
+        min-height: 100px;
+        resize: none;
     }
 
     .form-group input:focus,
