@@ -1,4 +1,4 @@
-<!-- Reusable Search & Filter Bar Component -->
+﻿<!-- Reusable Search & Filter Bar Component -->
 <!-- Reads search_query and sort_by from parent context with safe defaults -->
 <section class="filter-section">
     <div class="container">
@@ -23,11 +23,11 @@
 
                 <!-- Sort Dropdown -->
                 <select name="sort" id="sortFilter" class="filter-dropdown" onchange="this.form.submit()">
-                    <option value="latest" {% if sort_by=="latest" or not sort_by %}selected{% endif %}>Latest
+                    <option value="latest" {% if sort_by == 'latest' or not sort_by %}selected{% endif %}>Latest
                     </option>
-                    <option value="oldest" {% if sort_by=='oldest' %}selected{% endif %}>Oldest</option>
-                    <option value="az" {% if sort_by=='az' %}selected{% endif %}>A-Z</option>
-                    <option value="za" {% if sort_by=='za' %}selected{% endif %}>Z-A</option>
+                    <option value="oldest" {% if sort_by == 'oldest' %}selected{% endif %}>Oldest</option>
+                    <option value="az" {% if sort_by == 'az' %}selected{% endif %}>A-Z</option>
+                    <option value="za" {% if sort_by == 'za' %}selected{% endif %}>Z-A</option>
                 </select>
 
                 <!-- Hidden Submit Button (for search) -->
