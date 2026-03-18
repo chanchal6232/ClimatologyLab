@@ -364,8 +364,13 @@
                 </div>
                 <div class="spec-item">
                     <span class="spec-label">Grant Amount</span>
-                    <span class="spec-value">{% if project.grant_amount %}{{ project.grant_amount }}{% else %}N/A{%
-                        endif %}</span>
+                    <span class="spec-value">
+                        {% if project.grant_amount %}
+                        {{ project.grant_amount }}
+                        {% else %}
+                        N/A
+                        {% endif %}
+                    </span>
                 </div>
                 <div class="spec-item">
                     <span class="spec-label">Timeline</span>
