@@ -18,178 +18,207 @@
             <button class="people-tab" onclick="filterTeam('alumni')">Alumni</button>
         </div>
 
-        <!-- Faculty Section - Centered -->
-        <div class="faculty-section">
-            {% for member in faculty_members %}
-            <div class="person-card" data-category="faculty">
-                <div class="profile-photo-wrapper">
-                    {% if member.photo %}
-                    <img src="{{ member.photo.url }}" alt="{{ member.name }}" class="profile-photo">
-                    {% else %}
-                    <div class="profile-photo-placeholder">
-                        {{ member.name|first|upper }}
+        <!-- Faculty Section -->
+        <div class="team-group faculty-group" id="faculty-group" data-category="faculty">
+            <h2 class="category-heading">Faculty</h2>
+            <div class="faculty-section">
+                {% for member in faculty_members %}
+                <div class="person-card faculty-card" data-category="faculty">
+                    <div class="card-inner">
+                        <div class="profile-photo-wrapper">
+                            {% if member.photo %}
+                            <img src="{{ member.photo.url }}" alt="{{ member.name }}" class="profile-photo">
+                            {% else %}
+                            <div class="profile-photo-placeholder">
+                                {{ member.name|first|upper }}
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Bio info (appears on hover for faculty) -->
+                        <div class="bio-container">
+                            <h3 class="bio-heading">{{ member.name }}</h3>
+                            <p class="bio-member-role">{{ member.role }}</p>
+                            <p class="bio-text">{{ member.bio|default:"Information coming soon..." }}</p>
+                        </div>
                     </div>
-                    {% endif %}
-                </div>
 
-                <div class="info-box">
-                    <h3 class="member-name">{{ member.name|upper }}</h3>
-                    <p class="member-role">{{ member.role }}</p>
+                    <div class="info-box">
+                        <h3 class="member-name">{{ member.name|upper }}</h3>
+                        <p class="member-role">{{ member.role }}</p>
 
-                    <div class="contact-icons">
-                        <a href="mailto:{{ member.email }}" class="contact-icon" title="Email {{ member.name }}"
-                            aria-label="Email {{ member.name }}">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2">
-                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-                                <polyline points="22,6 12,13 2,6" />
-                            </svg>
-                        </a>
+                        <div class="contact-icons">
+                            <a href="mailto:{{ member.email }}" class="contact-icon" title="Email {{ member.name }}"
+                                aria-label="Email {{ member.name }}">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path
+                                        d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                                    <polyline points="22,6 12,13 2,6" />
+                                </svg>
+                            </a>
 
-                        {% if member.linkedin_url %}
-                        <a href="{{ member.linkedin_url }}" target="_blank" rel="noopener noreferrer"
-                            class="contact-icon" title="LinkedIn Profile"
-                            aria-label="LinkedIn Profile of {{ member.name }}">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                                <path
-                                    d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
-                            </svg>
-                        </a>
-                        {% endif %}
+                            {% if member.linkedin_url %}
+                            <a href="{{ member.linkedin_url }}" target="_blank" rel="noopener noreferrer"
+                                class="contact-icon" title="LinkedIn Profile"
+                                aria-label="LinkedIn Profile of {{ member.name }}">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                    <path
+                                        d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+                                </svg>
+                            </a>
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
+                {% endfor %}
             </div>
-            {% endfor %}
         </div>
 
-        <!-- Other Team Members Grid -->
-        <div class="people-grid">
-            {% for member in phd_members %}
-            <div class="person-card" data-category="phd">
-                <div class="profile-photo-wrapper">
-                    {% if member.photo %}
-                    <img src="{{ member.photo.url }}" alt="{{ member.name }}" class="profile-photo">
-                    {% else %}
-                    <div class="profile-photo-placeholder">
-                        {{ member.name|first|upper }}
-                    </div>
-                    {% endif %}
-                </div>
-
-                <div class="info-box">
-                    <h3 class="member-name">{{ member.name|upper }}</h3>
-                    <p class="member-role">{{ member.role }}</p>
-
-                    <div class="contact-icons">
-                        <a href="mailto:{{ member.email }}" class="contact-icon" title="Email {{ member.name }}"
-                            aria-label="Email {{ member.name }}">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2">
-                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-                                <polyline points="22,6 12,13 2,6" />
-                            </svg>
-                        </a>
-
-                        {% if member.linkedin_url %}
-                        <a href="{{ member.linkedin_url }}" target="_blank" rel="noopener noreferrer"
-                            class="contact-icon" title="LinkedIn Profile"
-                            aria-label="LinkedIn Profile of {{ member.name }}">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                                <path
-                                    d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
-                            </svg>
-                        </a>
+        <!-- PhD Scholars -->
+        <div class="team-group phd-group" id="phd-group" data-category="phd">
+            <h2 class="category-heading">PhD Scholars</h2>
+            <div class="people-grid">
+                {% for member in phd_members %}
+                <div class="person-card" data-category="phd">
+                    <div class="profile-photo-wrapper">
+                        {% if member.photo %}
+                        <img src="{{ member.photo.url }}" alt="{{ member.name }}" class="profile-photo">
+                        {% else %}
+                        <div class="profile-photo-placeholder">
+                            {{ member.name|first|upper }}
+                        </div>
                         {% endif %}
                     </div>
+
+                    <div class="info-box">
+                        <h3 class="member-name">{{ member.name|upper }}</h3>
+                        <p class="member-role">{{ member.role }}</p>
+
+                        <div class="contact-icons">
+                            <a href="mailto:{{ member.email }}" class="contact-icon" title="Email {{ member.name }}"
+                                aria-label="Email {{ member.name }}">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path
+                                        d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                                    <polyline points="22,6 12,13 2,6" />
+                                </svg>
+                            </a>
+
+                            {% if member.linkedin_url %}
+                            <a href="{{ member.linkedin_url }}" target="_blank" rel="noopener noreferrer"
+                                class="contact-icon" title="LinkedIn Profile"
+                                aria-label="LinkedIn Profile of {{ member.name }}">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                    <path
+                                        d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+                                </svg>
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
                 </div>
+                {% endfor %}
             </div>
-            {% endfor %}
+        </div>
 
-            <!-- Post Graduate Members -->
-            {% for member in postgraduate_members %}
-            <div class="person-card" data-category="postgraduate">
-                <div class="profile-photo-wrapper">
-                    {% if member.photo %}
-                    <img src="{{ member.photo.url }}" alt="{{ member.name }}" class="profile-photo">
-                    {% else %}
-                    <div class="profile-photo-placeholder">
-                        {{ member.name|first|upper }}
-                    </div>
-                    {% endif %}
-                </div>
-
-                <div class="info-box">
-                    <h3 class="member-name">{{ member.name|upper }}</h3>
-                    <p class="member-role">{{ member.role }}</p>
-
-                    <div class="contact-icons">
-                        <a href="mailto:{{ member.email }}" class="contact-icon" title="Email {{ member.name }}"
-                            aria-label="Email {{ member.name }}">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2">
-                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-                                <polyline points="22,6 12,13 2,6" />
-                            </svg>
-                        </a>
-
-                        {% if member.linkedin_url %}
-                        <a href="{{ member.linkedin_url }}" target="_blank" rel="noopener noreferrer"
-                            class="contact-icon" title="LinkedIn Profile"
-                            aria-label="LinkedIn Profile of {{ member.name }}">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                                <path
-                                    d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
-                            </svg>
-                        </a>
+        <!-- Post Graduate Members -->
+        <div class="team-group postgraduate-group" id="postgraduate-group" data-category="postgraduate">
+            <h2 class="category-heading">Post Graduate Members</h2>
+            <div class="people-grid">
+                {% for member in postgraduate_members %}
+                <div class="person-card" data-category="postgraduate">
+                    <div class="profile-photo-wrapper">
+                        {% if member.photo %}
+                        <img src="{{ member.photo.url }}" alt="{{ member.name }}" class="profile-photo">
+                        {% else %}
+                        <div class="profile-photo-placeholder">
+                            {{ member.name|first|upper }}
+                        </div>
                         {% endif %}
                     </div>
+
+                    <div class="info-box">
+                        <h3 class="member-name">{{ member.name|upper }}</h3>
+                        <p class="member-role">{{ member.role }}</p>
+
+                        <div class="contact-icons">
+                            <a href="mailto:{{ member.email }}" class="contact-icon" title="Email {{ member.name }}"
+                                aria-label="Email {{ member.name }}">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path
+                                        d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                                    <polyline points="22,6 12,13 2,6" />
+                                </svg>
+                            </a>
+
+                            {% if member.linkedin_url %}
+                            <a href="{{ member.linkedin_url }}" target="_blank" rel="noopener noreferrer"
+                                class="contact-icon" title="LinkedIn Profile"
+                                aria-label="LinkedIn Profile of {{ member.name }}">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                    <path
+                                        d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+                                </svg>
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
                 </div>
+                {% endfor %}
             </div>
-            {% endfor %}
+        </div>
 
-            <!-- Alumni -->
-            {% for member in alumni_members %}
-            <div class="person-card" data-category="alumni">
-                <div class="profile-photo-wrapper">
-                    {% if member.photo %}
-                    <img src="{{ member.photo.url }}" alt="{{ member.name }}" class="profile-photo">
-                    {% else %}
-                    <div class="profile-photo-placeholder">
-                        {{ member.name|first|upper }}
-                    </div>
-                    {% endif %}
-                </div>
-
-                <div class="info-box">
-                    <h3 class="member-name">{{ member.name|upper }}</h3>
-                    <p class="member-role">{{ member.role }}</p>
-
-                    <div class="contact-icons">
-                        {% if member.email %}
-                        <a href="mailto:{{ member.email }}" class="contact-icon" title="Email {{ member.name }}"
-                            aria-label="Email {{ member.name }}">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2">
-                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-                                <polyline points="22,6 12,13 2,6" />
-                            </svg>
-                        </a>
-                        {% endif %}
-
-                        {% if member.linkedin_url %}
-                        <a href="{{ member.linkedin_url }}" target="_blank" rel="noopener noreferrer"
-                            class="contact-icon" title="LinkedIn Profile"
-                            aria-label="LinkedIn Profile of {{ member.name }}">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                                <path
-                                    d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
-                            </svg>
-                        </a>
+        <!-- Alumni -->
+        <div class="team-group alumni-group" id="alumni-group" data-category="alumni">
+            <h2 class="category-heading">Alumni</h2>
+            <div class="people-grid">
+                {% for member in alumni_members %}
+                <div class="person-card" data-category="alumni">
+                    <div class="profile-photo-wrapper">
+                        {% if member.photo %}
+                        <img src="{{ member.photo.url }}" alt="{{ member.name }}" class="profile-photo">
+                        {% else %}
+                        <div class="profile-photo-placeholder">
+                            {{ member.name|first|upper }}
+                        </div>
                         {% endif %}
                     </div>
+
+                    <div class="info-box">
+                        <h3 class="member-name">{{ member.name|upper }}</h3>
+                        <p class="member-role">{{ member.role }}</p>
+
+                        <div class="contact-icons">
+                            {% if member.email %}
+                            <a href="mailto:{{ member.email }}" class="contact-icon" title="Email {{ member.name }}"
+                                aria-label="Email {{ member.name }}">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path
+                                        d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                                    <polyline points="22,6 12,13 2,6" />
+                                </svg>
+                            </a>
+                            {% endif %}
+
+                            {% if member.linkedin_url %}
+                            <a href="{{ member.linkedin_url }}" target="_blank" rel="noopener noreferrer"
+                                class="contact-icon" title="LinkedIn Profile"
+                                aria-label="LinkedIn Profile of {{ member.name }}">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                    <path
+                                        d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+                                </svg>
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
                 </div>
+                {% endfor %}
             </div>
-            {% endfor %}
         </div>
     </div>
 </section>
@@ -246,11 +275,30 @@
         box-shadow: 0 4px 12px rgba(13, 59, 102, 0.3);
     }
 
+    /* Category Headings */
+    .category-heading {
+        font-size: 24px;
+        font-weight: 700;
+        color: #0d3b66;
+        margin-bottom: 30px;
+        position: relative;
+        padding-bottom: 10px;
+        border-bottom: 3px solid #4A90E2;
+        display: inline-block;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .team-group {
+        margin-bottom: 80px;
+        width: 100%;
+    }
+
     /* People Grid - Responsive Grid */
     .people-grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-        gap: 40px;
+        gap: 60px 40px;
         max-width: 1400px;
         margin: 0 auto;
     }
@@ -258,14 +306,176 @@
     /* Person Card */
     .person-card {
         text-align: center;
-        transition: all 0.3s ease;
+        transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
         display: flex;
         flex-direction: column;
         align-items: center;
+        position: relative;
     }
 
-    .person-card:hover {
-        transform: translateY(-5px);
+    /* Faculty Card Specific - 100% Identical Grid Footprint */
+    .faculty-card {
+        cursor: pointer;
+        z-index: 1;
+        min-height: 400px;
+    }
+
+    .faculty-card:hover {
+        z-index: 1000;
+    }
+
+    .card-inner {
+        position: relative;
+        width: 200px;
+        /* FIXED WIDTH - NEVER EXPANDS */
+        height: 200px;
+        margin: 0 auto 25px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .faculty-card .profile-photo-wrapper {
+        width: 200px;
+        height: 200px;
+        z-index: 20;
+        transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        position: absolute;
+        left: 0;
+        border-radius: 50%;
+        overflow: hidden;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        border: none;
+    }
+
+    .faculty-card .bio-container {
+        position: absolute;
+        left: 100px;
+        /* Start at photo center */
+        top: 50%;
+        width: 0;
+        height: auto;
+        min-height: 220px;
+        background: #FFFFFF;
+        padding: 0;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        text-align: left;
+        border-radius: 110px 40px 40px 110px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        z-index: 5;
+        box-shadow: 0 25px 60px rgba(0, 0, 0, 0.15);
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        transform: translateY(-50%) scaleX(0);
+        transform-origin: left;
+        overflow: hidden;
+    }
+
+    /* Hover Interaction - Floating Reveal (Zero-Shift) */
+    @media (min-width: 1025px) {
+        .faculty-card:hover .card-inner {
+            transform: translateX(-350px);
+            /* Slide whole inner unit left */
+        }
+
+        .faculty-card:hover .profile-photo-wrapper {
+            transform: scale(1.05);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            z-index: 25;
+        }
+
+        .faculty-card:hover .bio-container {
+            width: 850px;
+            /* Floats over the grid */
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(-50%) scaleX(1);
+            padding: 30px 60px 30px 180px;
+            border-radius: 120px 30px 30px 120px;
+        }
+
+        .faculty-card:hover .bio-heading {
+            animation: slideUpFade 0.7s ease forwards 0.2s;
+            opacity: 0;
+        }
+
+        .faculty-card:hover .bio-text {
+            animation: slideUpFade 0.7s ease forwards 0.3s;
+            opacity: 0;
+            display: block !important;
+            column-count: 1 !important;
+            columns: auto !important;
+            column-width: auto !important;
+        }
+
+        /* Decisively hide name plate on hover to resolve ALL overlap issues */
+        .faculty-card:hover .info-box {
+            display: none !important;
+            opacity: 0 !important;
+            visibility: hidden !important;
+            pointer-events: none !important;
+        }
+    }
+
+    /* Animations */
+    @keyframes slideUpFade {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Bio Reveal Styles */
+    .bio-member-role {
+        color: #0D3B66;
+        font-weight: 600;
+        margin-bottom: 15px;
+        font-size: 14px;
+        display: block !important;
+        animation: slideUpFade 0.7s ease forwards 0.25s;
+        /* Smooth reveal */
+        opacity: 0;
+    }
+
+    .bio-heading {
+        font-size: 21px;
+        font-weight: 800;
+        color: #0D3B66;
+        margin-bottom: 12px;
+        display: inline-block;
+    }
+
+    .bio-text {
+        font-size: 15px;
+        color: #444;
+        line-height: 1.8;
+        margin: 0;
+        overflow: visible;
+        max-height: none;
+        display: block !important;
+        column-count: 1 !important;
+        columns: auto !important;
+        column-width: auto !important;
+        width: 100% !important;
+        column-gap: 0 !important;
+    }
+
+    /* Remove scrollbars */
+    .bio-text::-webkit-scrollbar {
+        display: none;
+    }
+
+    .bio-container::-webkit-scrollbar {
+        display: none;
     }
 
     /* Circular Profile Photo */
@@ -281,7 +491,7 @@
         position: relative;
     }
 
-    .person-card:hover .profile-photo-wrapper {
+    .person-card:not(.faculty-card):hover .profile-photo-wrapper {
         transform: scale(1.05);
         box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
     }
@@ -315,6 +525,7 @@
         box-shadow: 0 4px 15px rgba(13, 59, 102, 0.2);
         transition: all 0.3s ease;
         position: relative;
+        z-index: 3;
     }
 
     .person-card:hover .info-box {
@@ -405,7 +616,7 @@
     @media (max-width: 767px) {
         .people-grid {
             grid-template-columns: 1fr;
-            gap: 35px;
+            gap: 50px;
             padding: 0 15px;
         }
 
@@ -431,6 +642,15 @@
             padding: 10px 20px;
             font-size: 13px;
         }
+
+        .faculty-card .card-inner {
+            height: 240px;
+        }
+
+        .faculty-card .profile-photo-wrapper {
+            width: 240px;
+            height: 240px;
+        }
     }
 
     /* Animation for filtering */
@@ -450,71 +670,42 @@
         animation: fadeIn 0.4s ease;
     }
 
-    /* Faculty Section - Centered Layout */
+    /* Faculty Section - Standardized with other groups */
     .faculty-section {
         display: flex;
+        flex-wrap: wrap;
         justify-content: center;
-        margin-bottom: 80px;
+        gap: 60px 40px;
+        /* Matched to people-grid gap */
         width: 100%;
-    }
-
-    .faculty-section .person-card {
-        flex: 0 0 auto;
-    }
-
-    .faculty-section .profile-photo-wrapper {
-        width: 280px;
-        height: 280px;
-    }
-
-    .faculty-section .info-box {
-        max-width: 300px;
-    }
-
-    /* Responsive adjustments for faculty section */
-    @media (max-width: 767px) {
-        .faculty-section {
-            margin-bottom: 60px;
-        }
-
-        .faculty-section .profile-photo-wrapper {
-            width: 240px;
-            height: 240px;
-        }
-
-        .faculty-section .info-box {
-            max-width: 100%;
-        }
     }
 </style>
 
 <script>
     function filterTeam(category) {
-        const cards = document.querySelectorAll('.person-card');
+        const groups = document.querySelectorAll('.team-group');
         const tabs = document.querySelectorAll('.people-tab');
-        const facultySection = document.querySelector('.faculty-section');
 
         // Update active tab
         tabs.forEach(tab => tab.classList.remove('active'));
-        event.target.classList.add('active');
-
-        // Toggle Faculty Section visibility to prevent extra spacing
-        // The section has significant margin-bottom that needs to be removed when hidden
-        if (category === 'all' || category === 'faculty') {
-            if (facultySection) facultySection.style.display = 'flex';
-        } else {
-            if (facultySection) facultySection.style.display = 'none';
+        if (event && event.target) {
+            event.target.classList.add('active');
         }
 
-        // Filter cards
-        cards.forEach(card => {
-            const cardCategory = card.getAttribute('data-category');
+        // Filter groups
+        groups.forEach(group => {
+            const groupCategory = group.getAttribute('data-category');
 
-            if (category === 'all' || cardCategory === category) {
-                card.style.display = 'flex';
-                card.style.animation = 'fadeIn 0.4s ease';
+            if (category === 'all' || groupCategory === category) {
+                group.style.display = 'block';
+                group.style.animation = 'fadeIn 0.4s ease';
+
+                // Also ensure cards inside are visible (if they were hidden by a previous specific filter)
+                // This is needed if we ever split cards across groups
+                const cards = group.querySelectorAll('.person-card');
+                cards.forEach(card => card.style.display = 'flex');
             } else {
-                card.style.display = 'none';
+                group.style.display = 'none';
             }
         });
     }

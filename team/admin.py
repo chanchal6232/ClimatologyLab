@@ -11,7 +11,7 @@ class TeamMemberAdmin(BaseAdmin):
     
     fieldsets = (
         ('Basic Information', {
-            'fields': ('name', 'role', 'photo', 'email')
+            'fields': ('name', 'role', 'photo', 'email', 'bio')
         }),
         ('Links', {
             'fields': ('linkedin_url', 'google_scholar_url')

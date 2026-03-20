@@ -9,6 +9,7 @@ class TeamMember(models.Model):
     email = models.EmailField(blank=True, null=True)
     linkedin_url = models.URLField(blank=True, verbose_name="LinkedIn URL")
     google_scholar_url = models.URLField(blank=True, verbose_name="Google Scholar URL")
+    bio = models.TextField(blank=True, help_text="Short introduction/bio (especially for faculty)")
     order = models.IntegerField(default=0, help_text="Display order (lower numbers first)")
     is_active = models.BooleanField(default=True)
     
