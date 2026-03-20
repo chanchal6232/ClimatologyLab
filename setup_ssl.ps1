@@ -91,17 +91,25 @@ else {
 }
 
 # -------------------------------------------------------------------
-# STEP 5: Setup Win-ACME for Let's Encrypt
+# STEP 5: Setup Win-ACME for Let's Encrypt (Optional - only if no manual cert)
 # -------------------------------------------------------------------
-Write-Host "`n[5/5] Downloading Win-ACME for SSL..." -ForegroundColor Yellow
-$wacmeDir = "C:\win-acme"
-if (-not (Test-Path $wacmeDir)) {
-    New-Item -ItemType Directory -Path $wacmeDir -Force | Out-Null
-    $wacmeUrl = "https://github.com/win-acme/win-acme/releases/download/v2.2.8.1635/win-acme.v2.2.8.1635.x64.pluggable.zip"
-    $zipPath = Join-Path $env:TEMP "win-acme.zip"
-    Invoke-WebRequest -Uri $wacmeUrl -OutFile $zipPath
-    Expand-Archive -Path $zipPath -DestinationPath $wacmeDir -Force
-    Remove-Item $zipPath -Force
+$sslCertPath = Join-Path $sslDir "certificate.crt"
+
+if (-not (Test-Path $sslCertPath)) {
+    Write-Host "`n[5/5] Manual certificate not found. Downloading Win-ACME for SSL..." -ForegroundColor Yellow
+    $wacmeDir = "C:\win-acme"
+    if (-not (Test-Path $wacmeDir)) {
+        New-Item -ItemType Directory -Path $wacmeDir -Force | Out-Null
+        $wacmeUrl = "https://github.com/win-acme/win-acme/releases/download/v2.2.8.1635/win-acme.v2.2.8.1635.x64.pluggable.zip"
+        $zipPath = Join-Path $env:TEMP "win-acme.zip"
+        Invoke-WebRequest -Uri $wacmeUrl -OutFile $zipPath
+        Expand-Archive -Path $zipPath -DestinationPath $wacmeDir -Force
+        Remove-Item $zipPath -Force
+    }
+    Write-Host "Please run win-acme to get a certificate, or save your manual ones to $sslDir" -ForegroundColor Yellow
+}
+else {
+    Write-Host "`n[5/5] Manual certificate detected at $sslCertPath. Skipping Win-ACME." -ForegroundColor Green
 }
 
 Write-Host "`n==========================================" -ForegroundColor Cyan
@@ -109,6 +117,13 @@ Write-Host "  SETUP COMPLETE!" -ForegroundColor Green
 Write-Host "==========================================" -ForegroundColor Cyan
 Write-Host "`nFINAL STEPS:" -ForegroundColor Yellow
 Write-Host "1. Ensure Port 443 is open in AWS Security Groups."
-Write-Host "2. Run the following command in $wacmeDir to get your certificate:"
-Write-Host "   .\wacs.exe --target manual --host $Domain --certificatestore My --installation nginx --nginxconfigpath $destConf" -ForegroundColor White
-Write-Host "`n3. Restart Waitress service (ClimatologyLab) to apply port changes."
+if (Test-Path $sslCertPath) {
+    Write-Host "2. Manual certificates detected. Nginx is ready to use them." -ForegroundColor Green
+}
+else {
+    Write-Host "2. Run the following command in C:\win-acme to get your certificate:"
+    Write-Host "   .\wacs.exe --target manual --host $Domain --certificatestore My --installation nginx --nginxconfigpath $destConf" -ForegroundColor White
+}
+Write-Host "`n3. Restart ALL services:"
+Write-Host "   .\install_service.ps1"
+Write-Host "   nssm restart NginxService"

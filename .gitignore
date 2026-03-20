@@ -44,3 +44,9 @@ build/
 
 # Logs
 *.log
+
+# SSL Certificates (Added by Antigravity)
+*.crt
+*.key
+*.pem
+ssl/
