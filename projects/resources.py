@@ -1,11 +1,26 @@
 from import_export import resources, fields
-from import_export.widgets import DateWidget, ChoiceWidget
+from import_export.widgets import DateWidget, Widget
 from .models import ResearchProject
+
+class MapChoicesWidget(Widget):
+    """Custom widget to map human-readable labels to database keys"""
+    def __init__(self, choices, *args, **kwargs):
+        # Create a lowercase map for easy matching (e.g., {"completed": "completed"})
+        self.choices_map = {str(label).strip().lower(): key for key, label in choices}
+        super().__init__(*args, **kwargs)
+    
+    def clean(self, value, row=None, *args, **kwargs):
+        if not value or str(value).strip() in ['---', '', 'None']:
+            return None
+        
+        val_lower = str(value).strip().lower()
+        # Return the key if found in the map, otherwise return the original value
+        return self.choices_map.get(val_lower, value)
 
 class ResearchProjectResource(resources.ModelResource):
     """Import/Export resource for ResearchProject - optimized for current model"""
     
-    # Map CSV columns to model fields (only fields that exist in model)
+    # Map CSV columns to model fields
     title = fields.Field(attribute='title', column_name='TOPIC')
     description = fields.Field(attribute='description', column_name='DESCRIPTION')
     funding_agency = fields.Field(attribute='funding_agency', column_name='FUNDING AGENCY')
@@ -13,7 +28,7 @@ class ResearchProjectResource(resources.ModelResource):
     collaborators = fields.Field(attribute='collaborators', column_name='OTHER OFFICERS / COLLABORATORS')
     partner_institutions = fields.Field(attribute='partner_institutions', column_name='PARTNER INSTITUTIONS')
     
-    # Support MM/DD/YYYY format as seen in the CSV screenshot
+    # Support MM/DD/YYYY format
     start_date = fields.Field(
         attribute='start_date', 
         column_name='START DATE', 
@@ -25,26 +40,26 @@ class ResearchProjectResource(resources.ModelResource):
         widget=DateWidget(format='%m/%d/%Y')
     )
     
-    # Use ChoiceWidget to map human-readable labels (e.g., "Completed") to database keys (e.g., "completed")
+    # Use custom MapChoicesWidget to map labels (e.g., "Completed") to keys (e.g., "completed")
     status = fields.Field(
         attribute='status', 
         column_name='STATUS', 
-        widget=ChoiceWidget(choices=ResearchProject.STATUS_CHOICES)
+        widget=MapChoicesWidget(choices=ResearchProject.STATUS_CHOICES)
     )
     project_type = fields.Field(
         attribute='project_type', 
         column_name='PROJECT TYPE', 
-        widget=ChoiceWidget(choices=ResearchProject.PROJECT_TYPE_CHOICES)
+        widget=MapChoicesWidget(choices=ResearchProject.PROJECT_TYPE_CHOICES)
     )
     role = fields.Field(
         attribute='role', 
         column_name='ROLE', 
-        widget=ChoiceWidget(choices=ResearchProject.ROLE_CHOICES)
+        widget=MapChoicesWidget(choices=ResearchProject.ROLE_CHOICES)
     )
 
     class Meta:
         model = ResearchProject
-        import_id_fields = ('title',)  # Use title as unique identifier for updates
+        import_id_fields = ('title',)
         fields = (
             'title', 
             'description', 
