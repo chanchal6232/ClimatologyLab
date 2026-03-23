@@ -36,7 +36,7 @@ class PublicationResource(resources.ModelResource):
     authors = fields.Field(attribute='authors', column_name='AUTHORS')
     
     def before_import_row(self, row, **kwargs):
-        # 1. Handle case-insensitive headers (DATE vs Date vs date)
+        # 1. Handle case-insensitive headers
         for key in list(row.keys()):
             if key.upper() == 'AUTHORS' and key != 'AUTHORS': row['AUTHORS'] = row.pop(key)
             if key.upper() == 'TITLE' and key != 'TITLE': row['TITLE'] = row.pop(key)
@@ -45,30 +45,41 @@ class PublicationResource(resources.ModelResource):
         # 2. Extract Title and Authors from Citation (DATA) if missing
         citation = row.get('DATA', '')
         if citation:
-            # Attempt to split "Title. Authors (Year). Journal."
-            # Common pattern: parts[0] is title, parts[1] is authors
             parts = [p.strip() for p in citation.split('.') if p.strip()]
-            
             if not row.get('TITLE') or row.get('TITLE') == row.get('DATA'):
                 if parts: row['TITLE'] = parts[0][:499]
                 
             if not row.get('AUTHORS') or row.get('AUTHORS') == "Unknown Authors":
-                # Look for the segment containing the year (2024)
                 for part in parts:
                     if re.search(r'\(\d{4}\)', part):
-                        # The segment before the year usually contains authors
                         author_part = part.split('(')[0].strip()
                         if author_part:
                             row['AUTHORS'] = author_part
                             break
-                # Fallback: if second part exists, assume it's authors
-                if (not row.get('AUTHORS') or row.get('AUTHORS') == "Unknown Authors") and len(parts) > 1:
-                    row['AUTHORS'] = parts[1]
-
     class Meta:
         model = Publication
         fields = ('id', 'citation', 'publication_date', 'external_link', 'title', 'authors', 'journal', 'category')
-        export_order = fields
+
+# Category-specific resources to ensure correct assignment during import
+class JournalResource(PublicationResource):
+    def before_import_row(self, row, **kwargs):
+        super().before_import_row(row, **kwargs)
+        row['category'] = 'journal'
+
+class BookResource(PublicationResource):
+    def before_import_row(self, row, **kwargs):
+        super().before_import_row(row, **kwargs)
+        row['category'] = 'book'
+
+class ConferenceResource(PublicationResource):
+    def before_import_row(self, row, **kwargs):
+        super().before_import_row(row, **kwargs)
+        row['category'] = 'conference'
+
+class ThesisResource(PublicationResource):
+    def before_import_row(self, row, **kwargs):
+        super().before_import_row(row, **kwargs)
+        row['category'] = 'thesis'
 
 @admin.register(Publication)
 class PublicationAdmin(BaseAdmin):
@@ -76,52 +87,40 @@ class PublicationAdmin(BaseAdmin):
     list_display = ['title', 'journal', 'publication_date', 'category', 'scope', 'is_featured', 'is_active']
     list_filter = ['category', 'scope', 'is_featured', 'is_active', 'publication_date']
     search_fields = ['title', 'authors', 'journal', 'doi', 'abstract']
-    date_hierarchy = 'publication_date'
-    ordering = ['-publication_date']
-    
-    fieldsets = (
-        ('Publication Information', {
-            'fields': ('title', 'authors', 'category', 'scope', 'citation', 'abstract')
-        }),
-        ('Publication Details', {
-            'fields': ('journal', 'publication_date', 'volume', 'issue', 'pages', 'doi')
-        }),
-        ('Files & Links', {
-            'fields': ('cover_image', 'pdf_file', 'external_link', 'related_projects')
-        }),
-        ('Display Settings', {
-            'fields': ('is_featured', 'is_active')
-        }),
-    )
+    actions = ['fix_misplaced_categories']
+
+    @admin.action(description="Fix categories based on 'journal' field name")
+    def fix_misplaced_categories(self, request, queryset):
+        # Emergency fix for "Unknown Authors" and misplaced book chapters
+        count = 0
+        for obj in queryset:
+            if 'chapter' in obj.citation.lower() or 'book' in obj.citation.lower():
+                obj.category = 'book'
+                obj.save()
+                count += 1
+        self.message_user(request, f"Updated {count} publications to Book Chapters.")
 
 class BaseProxyAdmin(PublicationAdmin):
-    """Base admin for proxy models to hide category field and filter queryset"""
     def get_queryset(self, request):
         return super().get_queryset(request).filter(category=self.category_value)
-
     def save_model(self, request, obj, form, change):
         obj.category = self.category_value
         super().save_model(request, obj, form, change)
 
-    def get_form(self, request, obj=None, **kwargs):
-        form = super().get_form(request, obj, **kwargs)
-        # Hide category field since it's implied
-        if 'category' in form.base_fields:
-            form.base_fields['category'].widget = forms.HiddenInput()
-            form.base_fields['category'].initial = self.category_value
-        return form
-
 @admin.register(Journal)
 class JournalAdmin(BaseProxyAdmin):
     category_value = 'journal'
+    resource_class = JournalResource
 
 @admin.register(Conference)
 class ConferenceAdmin(BaseProxyAdmin):
     category_value = 'conference'
+    resource_class = ConferenceResource
 
 @admin.register(Book)
 class BookAdmin(BaseProxyAdmin):
     category_value = 'book'
+    resource_class = BookResource
 
 @admin.register(Guideline)
 class GuidelineAdmin(BaseProxyAdmin):
