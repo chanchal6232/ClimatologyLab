@@ -1,12 +1,31 @@
-from import_export import resources, fields
+from import_export import resources, fields, widgets
 from import_export.widgets import DateWidget, Widget
 from .models import ResearchProject
 
 class MapChoicesWidget(Widget):
-    """Custom widget to map human-readable labels to database keys"""
+    """Custom widget to map human-readable labels and common aliases to database keys"""
     def __init__(self, choices, *args, **kwargs):
-        # Create a lowercase map for easy matching (e.g., {"completed": "completed"})
+        # Create a lowercase map from the model choices
         self.choices_map = {str(label).strip().lower(): key for key, label in choices}
+        
+        # Add common aliases found in CSVs
+        aliases = {
+            'pi': 'pi',
+            'co-pi': 'co-pi',
+            'copi': 'co-pi',
+            'principal investigator': 'pi',
+            'co-principal investigator': 'co-pi',
+            'research project': 'research',
+            'consultancy project': 'consultancy',
+            'ongoing': 'ongoing',
+            'completed': 'completed',
+            'collaborator': 'team_member',
+            'project team member': 'team_member',
+        }
+        for alias, key in aliases.items():
+            if alias not in self.choices_map:
+                self.choices_map[alias] = key
+                
         super().__init__(*args, **kwargs)
     
     def clean(self, value, row=None, *args, **kwargs):
@@ -28,19 +47,19 @@ class ResearchProjectResource(resources.ModelResource):
     collaborators = fields.Field(attribute='collaborators', column_name='OTHER OFFICERS / COLLABORATORS')
     partner_institutions = fields.Field(attribute='partner_institutions', column_name='PARTNER INSTITUTIONS')
     
-    # Support MM/DD/YYYY format
+    # Support DD/MM/YYYY format as seen in latest screenshot
     start_date = fields.Field(
         attribute='start_date', 
         column_name='START DATE', 
-        widget=DateWidget(format='%m/%d/%Y')
+        widget=DateWidget(format='%d/%m/%Y')
     )
     end_date = fields.Field(
         attribute='end_date', 
         column_name='END DATE', 
-        widget=DateWidget(format='%m/%d/%Y')
+        widget=DateWidget(format='%d/%m/%Y')
     )
     
-    # Use custom MapChoicesWidget to map labels (e.g., "Completed") to keys (e.g., "completed")
+    # Use smarter MapChoicesWidget
     status = fields.Field(
         attribute='status', 
         column_name='STATUS', 
@@ -61,18 +80,9 @@ class ResearchProjectResource(resources.ModelResource):
         model = ResearchProject
         import_id_fields = ('title',)
         fields = (
-            'title', 
-            'description', 
-            'funding_agency', 
-            'grant_amount',
-            'collaborators', 
-            'partner_institutions',
-            'start_date', 
-            'end_date',
-            'status',
-            'role',
-            'project_type',
-            'is_active'
+            'title', 'description', 'funding_agency', 'grant_amount',
+            'collaborators', 'partner_institutions', 'start_date', 'end_date',
+            'status', 'role', 'project_type', 'is_active'
         )
         skip_unchanged = True
         report_skipped = True
