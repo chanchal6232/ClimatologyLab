@@ -414,7 +414,9 @@
     .faculty-expand-card {
         width: 350px;
         /* Initial Collapsed Width */
-        height: 380px;
+        min-height: 480px;
+        /* Increased to fit standard bios */
+        height: auto;
         background: #fff;
         border-radius: 40px;
         display: flex;
@@ -523,8 +525,8 @@
         transition: opacity 0.4s ease 0.2s, transform 0.5s ease 0.2s;
         visibility: hidden;
         white-space: normal;
-        overflow-y: auto;
-        /* Allow full content visibility via scroll if long */
+        overflow: visible;
+        /* Show all content at once */
     }
 
     .faculty-expand-card:hover .card-right-side {
@@ -572,8 +574,10 @@
         display: flex;
         align-items: center;
         gap: 20px;
-        padding-top: 25px;
-        border-top: 1px solid #f0f0f0;
+        padding-top: 5px;
+        /* Tighter padding */
+        border-top: none;
+        /* Removed the light blue line as requested */
     }
 
     .expanded-icon {
