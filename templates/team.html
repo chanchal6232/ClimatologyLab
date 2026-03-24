@@ -37,6 +37,17 @@
                         </div>
                         <div class="collapsed-nameplate">
                             <h3>{{ member.name|upper }}</h3>
+                            <div class="member-contact-links mt-2">
+                                <a href="mailto:{{ member.email }}" class="member-contact-icon"
+                                    style="opacity: 0.9; color: white; border: 1px solid rgba(255,255,255,0.3); width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%;">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2">
+                                        <path
+                                            d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                                        <polyline points="22,6 12,13 2,6" />
+                                    </svg>
+                                </a>
+                            </div>
                         </div>
                     </div>
 
@@ -48,14 +59,7 @@
                             environments, and human resilience. Part of the Climatology Lab faculty group." }}</p>
 
                         <div class="expanded-footer">
-                            <a href="mailto:{{ member.email }}" class="expanded-icon" title="Send Email">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="2">
-                                    <path
-                                        d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-                                    <polyline points="22,6 12,13 2,6" />
-                                </svg>
-                            </a>
+                            <!-- Email moved to left nameplate as requested -->
                             {% if member.linkedin_url %}
                             <a href="{{ member.linkedin_url }}" target="_blank" class="expanded-icon"
                                 title="LinkedIn Profile">
