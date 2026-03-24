@@ -63,9 +63,9 @@
                     <!-- RIGHT SIDE: Information Column (Expands on hover) -->
                     <div class="card-right-side">
                         <!-- Name and role removed from right side as they are already on the nameplate -->
-                        <div class="expanded-bio">
-                            {{ member.bio|default:"Information coming soon..."|linebreaks }}
-                        </div>
+                        <p class="expanded-bio">
+                            {{ member.bio|default:"Information coming soon..." }}
+                        </p>
 
                         <div class="expanded-footer">
                             <!-- Email moved to left nameplate as requested -->
@@ -422,7 +422,7 @@
         border-radius: 40px;
         display: flex;
         overflow: hidden;
-        transition: width 0.45s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.4s ease;
+        transition: width 0.75s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.4s ease;
         box-shadow: 0 10px 40px rgba(0, 0, 0, 0.06);
         cursor: pointer;
         position: relative;
@@ -570,15 +570,6 @@
         line-height: 1.8;
         margin-bottom: 25px;
         text-align: justify;
-    }
-
-    .expanded-bio p {
-        margin-bottom: 15px;
-        /* Matches the requested 3-paragraph spacing */
-    }
-
-    .expanded-bio p:last-child {
-        margin-bottom: 0;
     }
 
     .expanded-footer {
