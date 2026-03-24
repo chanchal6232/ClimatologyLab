@@ -122,6 +122,125 @@
 </div>
 
 <div class="row mt-4">
+    <div class="col-lg-12 mb-4">
+        <!-- New Detailed Publications Section (Like Admin Console) -->
+        <div class="dashboard-card border-0 shadow-sm">
+            <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
+                <h5 class="fw-800 mb-0 py-2 text-primary">PUBLICATIONS MANAGEMENT</h5>
+                <a href="{% url 'dashboard:publications_list' %}" class="btn btn-sm btn-outline-primary">View All Full
+                    List</a>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="py-3">Type</th>
+                            <th class="py-3 text-center">Items</th>
+                            <th class="py-3 text-end">Quick Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- JOURNAL ARTICLES -->
+                        <tr>
+                            <td class="py-3">
+                                <div class="fw-700">Journal Articles</div>
+                                <small class="text-muted">Academic peer-reviewed papers</small>
+                            </td>
+                            <td class="text-center py-3"><span
+                                    class="badge bg-primary-subtle text-primary rounded-pill px-3">{{ journal_count
+                                    }}</span></td>
+                            <td class="text-end py-3">
+                                <a href="{% url 'dashboard:publication_create' %}?category=journal"
+                                    class="btn btn-sm btn-light border px-3 me-2" title="Add"><i
+                                        class="bi bi-plus-lg text-success me-1"></i>Add</a>
+                                <a href="{% url 'dashboard:publications_list' %}?category=journal"
+                                    class="btn btn-sm btn-light border px-3" title="Manage"><i
+                                        class="bi bi-pencil-square text-primary me-1"></i>Manage</a>
+                            </td>
+                        </tr>
+
+                        <!-- CONFERENCE PAPERS -->
+                        <tr>
+                            <td class="py-3">
+                                <div class="fw-700">Conference Papers</div>
+                                <small class="text-muted">Proceedings and presentations</small>
+                            </td>
+                            <td class="text-center py-3"><span
+                                    class="badge bg-primary-subtle text-primary rounded-pill px-3">{{ conference_count
+                                    }}</span></td>
+                            <td class="text-end py-3">
+                                <a href="{% url 'dashboard:publication_create' %}?category=conference"
+                                    class="btn btn-sm btn-light border px-3 me-2" title="Add"><i
+                                        class="bi bi-plus-lg text-success me-1"></i>Add</a>
+                                <a href="{% url 'dashboard:publications_list' %}?category=conference"
+                                    class="btn btn-sm btn-light border px-3" title="Manage"><i
+                                        class="bi bi-pencil-square text-primary me-1"></i>Manage</a>
+                            </td>
+                        </tr>
+
+                        <!-- BOOK CHAPTERS -->
+                        <tr>
+                            <td class="py-3">
+                                <div class="fw-700">Book Chapters</div>
+                                <small class="text-muted">Authored or edited sections</small>
+                            </td>
+                            <td class="text-center py-3"><span
+                                    class="badge bg-primary-subtle text-primary rounded-pill px-3">{{ book_count
+                                    }}</span></td>
+                            <td class="text-end py-3">
+                                <a href="{% url 'dashboard:publication_create' %}?category=book"
+                                    class="btn btn-sm btn-light border px-3 me-2" title="Add"><i
+                                        class="bi bi-plus-lg text-success me-1"></i>Add</a>
+                                <a href="{% url 'dashboard:publications_list' %}?category=book"
+                                    class="btn btn-sm btn-light border px-3" title="Manage"><i
+                                        class="bi bi-pencil-square text-primary me-1"></i>Manage</a>
+                            </td>
+                        </tr>
+
+                        <!-- BOOKS (Guidelines/Full Books) -->
+                        <tr>
+                            <td class="py-3">
+                                <div class="fw-700">Books</div>
+                                <small class="text-muted">Complete monographs or guidelines</small>
+                            </td>
+                            <td class="text-center py-3"><span
+                                    class="badge bg-primary-subtle text-primary rounded-pill px-3">{{
+                                    book_guideline_count }}</span></td>
+                            <td class="text-end py-3">
+                                <a href="{% url 'dashboard:publication_create' %}?category=guideline"
+                                    class="btn btn-sm btn-light border px-3 me-2" title="Add"><i
+                                        class="bi bi-plus-lg text-success me-1"></i>Add</a>
+                                <a href="{% url 'dashboard:publications_list' %}?category=guideline"
+                                    class="btn btn-sm btn-light border px-3" title="Manage"><i
+                                        class="bi bi-pencil-square text-primary me-1"></i>Manage</a>
+                            </td>
+                        </tr>
+
+                        <!-- OTHER DOCUMENTS -->
+                        <tr>
+                            <td class="py-3">
+                                <div class="fw-700">Other Documents</div>
+                                <small class="text-muted">Theses, reports, and miscellaneous</small>
+                            </td>
+                            <td class="text-center py-3"><span
+                                    class="badge bg-primary-subtle text-primary rounded-pill px-3">{{ other_count
+                                    }}</span></td>
+                            <td class="text-end py-3">
+                                <a href="{% url 'dashboard:publication_create' %}?category=other"
+                                    class="btn btn-sm btn-light border px-3 me-2" title="Add"><i
+                                        class="bi bi-plus-lg text-success me-1"></i>Add</a>
+                                <a href="{% url 'dashboard:publications_list' %}?category=other"
+                                    class="btn btn-sm btn-light border px-3" title="Manage"><i
+                                        class="bi bi-pencil-square text-primary me-1"></i>Manage</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
     <div class="col-lg-8">
         <div class="dashboard-card">
             <h5 class="fw-700 mb-4">Quick Actions</h5>

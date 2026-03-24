@@ -107,14 +107,23 @@ def impact_story_delete(request, pk):
 @staff_member_required(login_url='/accounts/login/')
 def dashboard_home(request):
     rt_count = RTNotice.objects.count()
+    publications = Publication.objects.all()
+    
     context = {
         'project_count': ResearchProject.objects.count(),
-        'pub_count': Publication.objects.count(),
+        'pub_count': publications.count(),
         'team_count': TeamMember.objects.count(),
         'workshop_count': Workshop.objects.count(),
         'rt_count': rt_count,
         'carousel_count': CarouselImage.objects.count(),
         'impact_count': ImpactStory.objects.count(),
+        
+        # Category Counts
+        'journal_count': publications.filter(category='journal').count(),
+        'conference_count': publications.filter(category='conference').count(),
+        'book_count': publications.filter(category='book').count(),
+        'book_guideline_count': publications.filter(category='guideline').count(),
+        'other_count': publications.filter(category='other').count(),
     }
     return render(request, 'dashboard/home.html', context)
 
