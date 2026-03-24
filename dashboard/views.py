@@ -181,16 +181,34 @@ def project_delete(request, pk):
 @permission_required('publications.view_publication', raise_exception=True)
 def publications_list(request):
     query = request.GET.get('q')
+    category = request.GET.get('category')
+    
     publications = Publication.objects.all().order_by('-publication_date')
+    
+    # Category Filtering
+    if category and category != 'all':
+        publications = publications.filter(category=category)
+        
+    # Search Filtering
     if query:
         publications = publications.filter(
             Q(title__icontains=query) | Q(authors__icontains=query)
         )
-    return render(request, 'dashboard/publications_list.html', {'publications': publications, 'query': query})
+        
+    context = {
+        'publications': publications, 
+        'query': query, 
+        'current_category': category or 'all',
+        'categories': Publication.CATEGORY_CHOICES,
+        'total_count': Publication.objects.count()
+    }
+    return render(request, 'dashboard/publications_list.html', context)
 
 @staff_member_required(login_url='/accounts/login/')
 @permission_required('publications.add_publication', raise_exception=True)
 def publication_create(request):
+    initial_category = request.GET.get('category')
+    
     if request.method == 'POST':
         form = PublicationForm(request.POST, request.FILES)
         if form.is_valid():
@@ -198,7 +216,11 @@ def publication_create(request):
             messages.success(request, 'Publication added successfully!')
             return redirect('dashboard:publications_list')
     else:
-        form = PublicationForm()
+        initial_data = {}
+        if initial_category:
+            initial_data['category'] = initial_category
+        form = PublicationForm(initial=initial_data)
+        
     return render(request, 'dashboard/publication_form.html', {'form': form, 'title': 'Add New Publication'})
 
 @staff_member_required(login_url='/accounts/login/')

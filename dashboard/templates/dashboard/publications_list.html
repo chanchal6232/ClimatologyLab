@@ -5,40 +5,72 @@
 
 {% block content %}
 <div class="dashboard-card border-0 shadow-sm">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h5 class="fw-700 mb-0">Existing Publications</h5>
-        <div class="d-flex gap-2">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+        <div>
+            <h5 class="fw-700 mb-0">Existing Publications</h5>
+            <small class="text-muted">Currently showing {{ publications.count }} item(s)</small>
+        </div>
+        <div class="d-flex flex-wrap gap-2 align-items-center">
             <form class="d-flex me-2" method="get">
+                <input type="hidden" name="category" value="{{ current_category }}">
                 <input class="form-control form-control-sm me-2" type="search" name="q"
                     placeholder="Search publications..." value="{{ query|default:'' }}">
                 <button class="btn btn-sm btn-outline-primary" type="submit">Search</button>
             </form>
+
             <a href="{% url 'dashboard:import_data' 'publications' %}"
                 class="btn btn-outline-primary btn-sm d-flex align-items-center gap-2">
                 <i class="bi bi-cloud-arrow-up"></i> Import
             </a>
-            <div class="dropdown">
-                <button class="btn btn-outline-primary btn-sm dropdown-toggle d-flex align-items-center gap-2"
-                    type="button" data-bs-toggle="dropdown">
-                    <i class="bi bi-cloud-arrow-down"></i> Export
+
+            <div class="btn-group">
+                <button type="button" class="btn btn-primary btn-sm dropdown-toggle d-flex align-items-center gap-2"
+                    data-bs-toggle="dropdown">
+                    <i class="bi bi-plus-lg"></i> Add New
                 </button>
                 <ul class="dropdown-menu dropdown-menu-end shadow border-0">
-                    <li><a class="dropdown-item" href="{% url 'dashboard:export_data' 'publications' %}?format=csv"><i
-                                class="bi bi-filetype-csv me-2"></i>CSV</a></li>
-                    <li><a class="dropdown-item" href="{% url 'dashboard:export_data' 'publications' %}?format=xlsx"><i
-                                class="bi bi-file-earmark-excel me-2"></i>Excel</a></li>
+                    <li>
+                        <h6 class="dropdown-header">Select Category</h6>
+                    </li>
+                    {% for cat_key, cat_label in categories %}
+                    <li><a class="dropdown-item" href="{% url 'dashboard:publication_create' %}?category={{ cat_key }}">
+                            <i class="bi bi-file-earmark-plus me-2"></i>{{ cat_label }}
+                        </a></li>
+                    {% endfor %}
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+                    <li><a class="dropdown-item" href="{% url 'dashboard:publication_create' %}">
+                            <i class="bi bi-plus-circle me-2"></i>General Publication
+                        </a></li>
                 </ul>
             </div>
-            <button type="submit" form="bulkDeleteForm" class="btn btn-danger btn-sm d-flex align-items-center gap-2"
+
+            <button type="submit" form="bulkDeleteForm"
+                class="btn btn-outline-danger btn-sm d-flex align-items-center gap-2"
                 onclick="return confirm('Are you sure you want to delete the selected publications?');">
                 <i class="bi bi-trash"></i> Delete Selected
             </button>
-            <a href="{% url 'dashboard:publication_create' %}"
-                class="btn btn-primary btn-sm d-flex align-items-center gap-2">
-                <i class="bi bi-plus-lg"></i> Add New Publication
-            </a>
         </div>
     </div>
+
+    <!-- Category Filter Tabs -->
+    <ul class="nav nav-tabs border-bottom mb-4">
+        <li class="nav-item">
+            <a class="nav-link {% if current_category == 'all' %}active fw-700{% endif %}"
+                href="{% url 'dashboard:publications_list' %}?category=all{% if query %}&q={{ query }}{% endif %}">
+                All <span class="badge rounded-pill bg-secondary ms-1">{{ total_count|default:'' }}</span>
+            </a>
+        </li>
+        {% for cat_key, cat_label in categories %}
+        <li class="nav-item">
+            <a class="nav-link {% if current_category == cat_key %}active fw-700{% endif %}"
+                href="{% url 'dashboard:publications_list' %}?category={{ cat_key }}{% if query %}&q={{ query }}{% endif %}">
+                {{ cat_label }}
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
 
     <form id="bulkDeleteForm" action="{% url 'dashboard:bulk_delete' %}" method="post">
         {% csrf_token %}
