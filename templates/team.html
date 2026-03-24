@@ -25,20 +25,38 @@
                 {% for member in faculty_members %}
                 <div class="faculty-expand-row" data-category="faculty">
                     <div class="faculty-photo-anchor">
-                        <div class="faculty-circle-wrapper">
+                        <div class="member-photo-wrapper">
                             {% if member.photo %}
-                            <img src="{{ member.photo.url }}" alt="{{ member.name }}" class="faculty-circle-img">
+                            <img src="{{ member.photo.url }}" alt="{{ member.name }}" class="member-photo">
                             {% else %}
-                            <div class="faculty-circle-placeholder">
+                            <div class="member-photo-placeholder">
                                 {{ member.name|first|upper }}
                             </div>
                             {% endif %}
                         </div>
 
                         <!-- Minimal name plate visible when NOT hovered -->
-                        <div class="faculty-minimial-info">
-                            <h3 class="mini-name">{{ member.name|upper }}</h3>
-                            <p class="mini-role">{{ member.role }}</p>
+                        <div class="member-info-plate">
+                            <h3 class="member-name-text">{{ member.name|upper }}</h3>
+                            <p class="member-role-text">{{ member.role }}</p>
+                            <div class="member-contact-links">
+                                <a href="mailto:{{ member.email }}" class="member-contact-icon">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2">
+                                        <path
+                                            d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                                        <polyline points="22,6 12,13 2,6" />
+                                    </svg>
+                                </a>
+                                {% if member.linkedin_url %}
+                                <a href="{{ member.linkedin_url }}" target="_blank" class="member-contact-icon">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                                        <path
+                                            d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+                                    </svg>
+                                </a>
+                                {% endif %}
+                            </div>
                         </div>
                     </div>
 
@@ -76,39 +94,35 @@
         <!-- PhD Scholars -->
         <div class="team-group phd-group" id="phd-group" data-category="phd">
             <h2 class="category-heading">PhD Scholars</h2>
-            <div class="people-grid">
+            <div class="people-grid-standard">
                 {% for member in phd_members %}
-                <div class="person-card" data-category="phd">
-                    <div class="profile-photo-wrapper">
+                <div class="member-base-card" data-category="phd">
+                    <div class="member-photo-wrapper">
                         {% if member.photo %}
-                        <img src="{{ member.photo.url }}" alt="{{ member.name }}" class="profile-photo">
+                        <img src="{{ member.photo.url }}" alt="{{ member.name }}" class="member-photo">
                         {% else %}
-                        <div class="profile-photo-placeholder">
+                        <div class="member-photo-placeholder">
                             {{ member.name|first|upper }}
                         </div>
                         {% endif %}
                     </div>
 
-                    <div class="info-box">
-                        <h3 class="member-name">{{ member.name|upper }}</h3>
-                        <p class="member-role">{{ member.role }}</p>
+                    <div class="member-info-plate">
+                        <h3 class="member-name-text">{{ member.name|upper }}</h3>
+                        <p class="member-role-text">{{ member.role }}</p>
 
-                        <div class="contact-icons">
-                            <a href="mailto:{{ member.email }}" class="contact-icon" title="Email {{ member.name }}"
-                                aria-label="Email {{ member.name }}">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        <div class="member-contact-links">
+                            <a href="mailto:{{ member.email }}" class="member-contact-icon">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                     stroke-width="2">
                                     <path
                                         d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
                                     <polyline points="22,6 12,13 2,6" />
                                 </svg>
                             </a>
-
                             {% if member.linkedin_url %}
-                            <a href="{{ member.linkedin_url }}" target="_blank" rel="noopener noreferrer"
-                                class="contact-icon" title="LinkedIn Profile"
-                                aria-label="LinkedIn Profile of {{ member.name }}">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <a href="{{ member.linkedin_url }}" target="_blank" class="member-contact-icon">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
                                     <path
                                         d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
                                 </svg>
@@ -124,39 +138,35 @@
         <!-- Post Graduate Members -->
         <div class="team-group postgraduate-group" id="postgraduate-group" data-category="postgraduate">
             <h2 class="category-heading">Post Graduate Members</h2>
-            <div class="people-grid">
+            <div class="people-grid-standard">
                 {% for member in postgraduate_members %}
-                <div class="person-card" data-category="postgraduate">
-                    <div class="profile-photo-wrapper">
+                <div class="member-base-card" data-category="postgraduate">
+                    <div class="member-photo-wrapper">
                         {% if member.photo %}
-                        <img src="{{ member.photo.url }}" alt="{{ member.name }}" class="profile-photo">
+                        <img src="{{ member.photo.url }}" alt="{{ member.name }}" class="member-photo">
                         {% else %}
-                        <div class="profile-photo-placeholder">
+                        <div class="member-photo-placeholder">
                             {{ member.name|first|upper }}
                         </div>
                         {% endif %}
                     </div>
 
-                    <div class="info-box">
-                        <h3 class="member-name">{{ member.name|upper }}</h3>
-                        <p class="member-role">{{ member.role }}</p>
+                    <div class="member-info-plate">
+                        <h3 class="member-name-text">{{ member.name|upper }}</h3>
+                        <p class="member-role-text">{{ member.role }}</p>
 
-                        <div class="contact-icons">
-                            <a href="mailto:{{ member.email }}" class="contact-icon" title="Email {{ member.name }}"
-                                aria-label="Email {{ member.name }}">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        <div class="member-contact-links">
+                            <a href="mailto:{{ member.email }}" class="member-contact-icon">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                     stroke-width="2">
                                     <path
                                         d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
                                     <polyline points="22,6 12,13 2,6" />
                                 </svg>
                             </a>
-
                             {% if member.linkedin_url %}
-                            <a href="{{ member.linkedin_url }}" target="_blank" rel="noopener noreferrer"
-                                class="contact-icon" title="LinkedIn Profile"
-                                aria-label="LinkedIn Profile of {{ member.name }}">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <a href="{{ member.linkedin_url }}" target="_blank" class="member-contact-icon">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
                                     <path
                                         d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
                                 </svg>
@@ -172,28 +182,27 @@
         <!-- Alumni -->
         <div class="team-group alumni-group" id="alumni-group" data-category="alumni">
             <h2 class="category-heading">Alumni</h2>
-            <div class="people-grid">
+            <div class="people-grid-standard">
                 {% for member in alumni_members %}
-                <div class="person-card" data-category="alumni">
-                    <div class="profile-photo-wrapper">
+                <div class="member-base-card" data-category="alumni">
+                    <div class="member-photo-wrapper">
                         {% if member.photo %}
-                        <img src="{{ member.photo.url }}" alt="{{ member.name }}" class="profile-photo">
+                        <img src="{{ member.photo.url }}" alt="{{ member.name }}" class="member-photo">
                         {% else %}
-                        <div class="profile-photo-placeholder">
+                        <div class="member-photo-placeholder">
                             {{ member.name|first|upper }}
                         </div>
                         {% endif %}
                     </div>
 
-                    <div class="info-box">
-                        <h3 class="member-name">{{ member.name|upper }}</h3>
-                        <p class="member-role">{{ member.role }}</p>
+                    <div class="member-info-plate">
+                        <h3 class="member-name-text">{{ member.name|upper }}</h3>
+                        <p class="member-role-text">{{ member.role }}</p>
 
-                        <div class="contact-icons">
+                        <div class="member-contact-links">
                             {% if member.email %}
-                            <a href="mailto:{{ member.email }}" class="contact-icon" title="Email {{ member.name }}"
-                                aria-label="Email {{ member.name }}">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            <a href="mailto:{{ member.email }}" class="member-contact-icon">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                     stroke-width="2">
                                     <path
                                         d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
@@ -201,12 +210,9 @@
                                 </svg>
                             </a>
                             {% endif %}
-
                             {% if member.linkedin_url %}
-                            <a href="{{ member.linkedin_url }}" target="_blank" rel="noopener noreferrer"
-                                class="contact-icon" title="LinkedIn Profile"
-                                aria-label="LinkedIn Profile of {{ member.name }}">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <a href="{{ member.linkedin_url }}" target="_blank" class="member-contact-icon">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
                                     <path
                                         d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
                                 </svg>
@@ -301,17 +307,101 @@
         margin: 0 auto;
     }
 
-    /* Person Card */
-    .person-card {
-        text-align: center;
-        transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    /* ALL MEMBERS - SHARED BASE DESIGN (CIRCLE + BLUE PLATE) */
+    .people-grid-standard {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 60px 40px;
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
+    .member-base-card {
         display: flex;
         flex-direction: column;
         align-items: center;
-        position: relative;
+        text-align: center;
+        transition: all 0.4s ease;
     }
 
-    /* Faculty Section - NEW FLOW-BASED EXPANSION (NO OVERFLOW) */
+    .member-photo-wrapper {
+        width: 220px;
+        height: 220px;
+        border-radius: 50%;
+        overflow: hidden;
+        border: 4px solid white;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        background: white;
+        transition: all 0.4s ease;
+        margin-bottom: 15px;
+    }
+
+    .member-base-card:hover .member-photo-wrapper {
+        transform: scale(1.05);
+        box-shadow: 0 15px 45px rgba(0, 0, 0, 0.2);
+    }
+
+    .member-photo {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .member-photo-placeholder {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #4A90E2 0%, #0D3B66 100%);
+        color: white;
+        font-size: 60px;
+        font-weight: 700;
+    }
+
+    .member-info-plate {
+        background: linear-gradient(135deg, #4A90E2 0%, #0D3B66 100%);
+        padding: 10px 20px;
+        border-radius: 12px;
+        color: white;
+        width: 200px;
+        box-shadow: 0 5px 15px rgba(13, 59, 102, 0.2);
+        transition: all 0.4s ease;
+    }
+
+    .member-name-text {
+        font-size: 14px;
+        font-weight: 700;
+        margin: 0 0 2px 0;
+    }
+
+    .member-role-text {
+        font-size: 11px;
+        color: rgba(255, 255, 255, 0.9);
+        margin: 0 0 8px 0;
+        font-style: italic;
+    }
+
+    .member-contact-links {
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+        padding-top: 5px;
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .member-contact-icon {
+        color: white;
+        opacity: 0.8;
+        transition: 0.3s;
+    }
+
+    .member-contact-icon:hover {
+        opacity: 1;
+        transform: translateY(-2px);
+    }
+
+    /* FACULTY SECTION - FLOW REVEAL */
     .faculty-flow-container {
         display: flex;
         flex-direction: column;
@@ -327,7 +417,6 @@
         justify-content: center;
         width: 100%;
         min-height: 250px;
-        position: relative;
         transition: all 0.5s ease;
     }
 
@@ -341,142 +430,13 @@
         transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
     }
 
-    .faculty-circle-wrapper {
-        width: 220px;
-        height: 220px;
-        border-radius: 50%;
-        overflow: hidden;
-        background: white;
-        border: 4px solid white;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        position: relative;
-    }
-
-    .faculty-circle-img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-
-    .faculty-circle-placeholder {
-        width: 100%;
-        height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: linear-gradient(135deg, #4A90E2 0%, #0D3B66 100%);
-        color: white;
-        font-size: 60px;
-        font-weight: 700;
-    }
-
-    /* Minimal Info - Default visible */
-    .faculty-minimial-info {
-        margin-top: 15px;
-        background: linear-gradient(135deg, #4A90E2 0%, #0D3B66 100%);
-        padding: 10px 20px;
-        border-radius: 10px;
-        color: white;
-        width: 200px;
-        text-align: center;
-        transition: all 0.4s ease;
-        opacity: 1;
-    }
-
-    .mini-name {
-        font-size: 14px;
-        font-weight: 700;
-        margin: 0;
-    }
-
-    .mini-role {
-        font-size: 11px;
-        opacity: 0.9;
-        margin: 5px 0 0 0;
-    }
-
-    /* Bio Card - IN THE DOCUMENT FLOW */
-    .faculty-bio-flow-card {
-        max-width: 0;
-        width: 100%;
-        opacity: 0;
-        visibility: hidden;
-        overflow: hidden;
-        /* Critical for slide effect */
-        background: white;
-        border-radius: 0 40px 40px 0;
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
-        transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
-        margin-left: -110px;
-        /* Half of circle radius for overlap */
-        z-index: 10;
-        height: auto;
-    }
-
-    .faculty-full-content {
-        padding: 50px 60px 40px 140px;
-        /* Extra left padding to clear circle */
-        min-width: 800px;
-        /* Ensures text doesn't wrap awkwardly during expansion */
-    }
-
-    .full-name {
-        font-size: 26px;
-        font-weight: 800;
-        color: #0D3B66;
-        margin-bottom: 5px;
-    }
-
-    .full-role {
-        font-size: 14px;
-        color: #4A90E2;
-        font-weight: 600;
-        margin-bottom: 20px;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-    }
-
-    .full-bio {
-        font-size: 14px;
-        color: #555;
-        line-height: 1.8;
-        margin-bottom: 25px;
-        text-align: justify;
-    }
-
-    .full-contact {
-        display: flex;
-        gap: 15px;
-        border-top: 1px solid #f0f0f0;
-        padding-top: 20px;
-    }
-
-    .full-contact-icon {
-        width: 36px;
-        height: 36px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: #f8f9fa;
-        color: #0D3B66;
-        border-radius: 50%;
-        transition: 0.3s;
-    }
-
-    .full-contact-icon:hover {
-        background: #0D3B66;
-        color: white;
-        transform: translateY(-3px);
-    }
-
-    /* DESKTOP HOVER - THE FIX */
+    /* Faculty Hover Logic */
     @media (min-width: 1024px) {
         .faculty-expand-row:hover .faculty-photo-anchor {
             transform: translateX(-400px);
-            /* Move left anchor to make room */
         }
 
-        .faculty-expand-row:hover .faculty-minimial-info {
+        .faculty-expand-row:hover .member-info-plate {
             opacity: 0;
             visibility: hidden;
         }
@@ -485,82 +445,26 @@
             max-width: 1000px;
             opacity: 1;
             visibility: visible;
-            /* Since it's in the flow, the parent row expands, PhD scholars section moves down! */
         }
     }
 
-    /* Mobile handling - Stays in flow naturally */
-    @media (max-width: 1023px) {
-        .faculty-expand-row {
-            flex-direction: column;
-            height: auto;
-        }
-
-        .faculty-photo-anchor {
-            width: 100%;
-            margin-bottom: 20px;
-        }
-
-        .faculty-minimial-info {
-            display: none;
-        }
-
-        .faculty-bio-flow-card {
-            max-width: 100%;
-            opacity: 1;
-            visibility: visible;
-            margin-left: 0;
-            border-radius: 20px;
-            padding-top: 20px;
-        }
-
-        .faculty-full-content {
-            padding: 30px;
-            min-width: 0;
-        }
-    }
-
-    /* PhD and others - keeping grid but improving aesthetics */
-    .people-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-        gap: 40px;
-        max-width: 1400px;
-        margin: 0 auto;
-    }
-
-    /* Standard Person Card Styles (Shared) */
-    .person-card {
-        text-align: center;
-        transition: all 0.4s ease;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        background: white;
-        padding: 30px 20px;
-        border-radius: 20px;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.03);
-        border: 1px solid rgba(0, 0, 0, 0.02);
-    }
-
-    .person-card:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
-    }
-
-    .profile-photo-wrapper {
-        width: 180px;
-        height: 180px;
-        margin-bottom: 20px;
-        border-radius: 50%;
+    .faculty-bio-flow-card {
+        max-width: 0;
+        width: 100%;
+        opacity: 0;
+        visibility: hidden;
         overflow: hidden;
-        border: 4px solid white;
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-        transition: all 0.4s ease;
+        background: white;
+        border-radius: 0 40px 40px 0;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+        transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+        margin-left: -110px;
+        z-index: 10;
     }
 
-    .person-card:hover .profile-photo-wrapper {
-        transform: scale(1.05);
+    .faculty-full-content {
+        padding: 50px 60px 40px 140px;
+        min-width: 800px;
     }
 
     .profile-photo {
@@ -760,7 +664,7 @@
                 group.style.animation = 'fadeIn 0.4s ease';
 
                 // Also ensure cards inside are visible
-                const cards = group.querySelectorAll('.person-card, .faculty-expand-row');
+                const cards = group.querySelectorAll('.member-base-card, .faculty-expand-row');
                 cards.forEach(card => card.style.display = 'flex');
             } else {
                 group.style.display = 'none';
