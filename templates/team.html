@@ -20,60 +20,54 @@
 
         <!-- Faculty Section -->
         <div class="team-group faculty-group" id="faculty-group" data-category="faculty">
-            <h2 class="category-heading">Executive Faculty</h2>
-            <div class="faculty-centric-container">
+            <h2 class="category-heading">Faculty</h2>
+            <div class="faculty-flip-grid">
                 {% for member in faculty_members %}
-                <div class="faculty-modern-card" data-category="faculty">
-                    <div class="modern-card-inner">
-                        <!-- FRONT SIDE (Visual Centric) -->
-                        <div class="modern-card-front">
-                            <div class="faculty-visual-wrapper">
+                <div class="faculty-flip-card" data-category="faculty">
+                    <div class="flip-card-inner">
+                        <!-- FRONT SIDE (Normal UI) -->
+                        <div class="flip-card-front">
+                            <div class="member-photo-wrapper">
                                 {% if member.photo %}
-                                <img src="{{ member.photo.url }}" alt="{{ member.name }}" class="faculty-circle-img">
+                                <img src="{{ member.photo.url }}" alt="{{ member.name }}" class="member-photo">
                                 {% else %}
-                                <div class="faculty-circle-placeholder">
+                                <div class="member-photo-placeholder">
                                     {{ member.name|first|upper }}
                                 </div>
                                 {% endif %}
                             </div>
-                            <div class="faculty-horizontal-plate">
-                                <div class="plate-content">
-                                    <h3 class="faculty-name-title">{{ member.name|upper }}</h3>
-                                    <div class="plate-divider"></div>
-                                    <div class="plate-meta">
-                                        <span class="faculty-designation">{{ member.role }}</span>
-                                        <div class="plate-icons">
-                                            <a href="mailto:{{ member.email }}" class="plate-icon-link">
-                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
-                                                    stroke="currentColor" stroke-width="2">
-                                                    <path
-                                                        d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-                                                    <polyline points="22,6 12,13 2,6" />
-                                                </svg>
-                                            </a>
-                                            {% if member.linkedin_url %}
-                                            <a href="{{ member.linkedin_url }}" target="_blank" class="plate-icon-link">
-                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                                                    <path
-                                                        d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
-                                                </svg>
-                                            </a>
-                                            {% endif %}
-                                        </div>
-                                    </div>
+                            <div class="member-info-plate">
+                                <h3 class="member-name-text">{{ member.name|upper }}</h3>
+                                <p class="member-role-text">{{ member.role }}</p>
+                                <div class="member-contact-links">
+                                    <a href="mailto:{{ member.email }}" class="member-contact-icon">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="2">
+                                            <path
+                                                d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                                            <polyline points="22,6 12,13 2,6" />
+                                        </svg>
+                                    </a>
+                                    {% if member.linkedin_url %}
+                                    <a href="{{ member.linkedin_url }}" target="_blank" class="member-contact-icon">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                                            <path
+                                                d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+                                        </svg>
+                                    </a>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
 
-                        <!-- BACK SIDE (Bio Reveal) -->
-                        <div class="modern-card-back">
-                            <div class="back-bio-container">
-                                <h3 class="back-bio-name">{{ member.name }}</h3>
-                                <p class="back-bio-role">{{ member.role }}</p>
-                                <div class="back-bio-divider"></div>
-                                <div class="back-bio-text">
-                                    {{ member.bio|default:"Information coming soon..." }}
-                                </div>
+                        <!-- BACK SIDE (Introductory Part) -->
+                        <div class="flip-card-back">
+                            <div class="back-content-scroll">
+                                <h3 class="back-name">{{ member.name }}</h3>
+                                <p class="back-role">{{ member.role }}</p>
+                                <div class="back-divider"></div>
+                                <p class="back-bio">{{ member.bio|default:"Information coming soon..." }}</p>
+
                             </div>
                         </div>
                     </div>
@@ -392,193 +386,180 @@
         transform: translateY(-2px);
     }
 
-    /* NEW FACULTY CENTRIC DESIGN */
-    .faculty-centric-container {
+    /* FACULTY SECTION - FLAGGSHIP CENTRIC DESIGN (NO SCROLL) */
+    .faculty-flip-grid {
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 80px;
+        gap: 40px;
+        /* Tighter gap */
         width: 100%;
-        margin-top: 50px;
+        margin-top: 20px;
     }
 
-    .faculty-modern-card {
-        width: 900px;
-        /* Modern horizontal width */
-        min-height: 550px;
+    .faculty-flip-card {
         background-color: transparent;
+        width: 1000px;
+        height: 420px;
+        /* Reduced vertical footprint */
         perspective: 2000px;
+        cursor: pointer;
     }
 
-    .modern-card-inner {
+    /* PERFECT CIRCLE PROFILE (SMALLER & CENTRIC) */
+    .faculty-flip-card .member-photo-wrapper {
+        width: 220px !important;
+        height: 220px !important;
+        aspect-ratio: 1/1;
+        border-radius: 50%;
+        margin-bottom: 25px;
+        /* Spacing between circle and plate */
+    }
+
+    .faculty-flip-card .member-photo {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 50%;
+    }
+
+    .faculty-flip-card .member-photo-placeholder {
+        font-size: 50px;
+    }
+
+    /* LONG HORIZONTAL NAMEPLATE */
+    .faculty-flip-card .member-info-plate {
+        width: 650px;
+        /* Long format */
+        height: auto;
+        padding: 15px 40px;
+        /* Horizontal padding, low vertical */
+        flex-direction: column;
+        /* Stack name/role/icons within the long plate */
+        border-radius: 20px;
+        /* Slightly more modern radius for long plate */
+    }
+
+    .faculty-flip-card .member-name-text {
+        font-size: 20px;
+        /* Balanced size */
+        white-space: nowrap;
+    }
+
+    .faculty-flip-card .member-contact-links {
+        margin-top: 10px;
+        justify-content: center;
+    }
+
+    .flip-card-inner {
         position: relative;
         width: 100%;
         height: 100%;
-        transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        text-align: center;
+        transition: transform 0.9s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         transform-style: preserve-3d;
+        border-radius: 40px;
+        box-shadow: 0 20px 80px rgba(0, 0, 0, 0.1);
     }
 
-    .faculty-modern-card:hover .modern-card-inner {
+    .faculty-flip-card:hover .flip-card-inner {
         transform: rotateY(180deg);
     }
 
-    .modern-card-front,
-    .modern-card-back {
+    .flip-card-front,
+    .flip-card-back {
         position: absolute;
         width: 100%;
         height: 100%;
         backface-visibility: hidden;
         border-radius: 40px;
-        background: white;
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.08);
-        border: 1px solid rgba(0, 0, 0, 0.03);
         overflow: hidden;
+        background: white;
+        border: 1px solid rgba(0, 0, 0, 0.03);
     }
 
-    /* FRONT DESIGN */
-    .modern-card-front {
+    /* TIGHTER FRONT FACADE (75% Padding Reduction) */
+    .flip-card-front {
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        padding: 40px;
+        background: #fff;
+        padding: 20px;
+        /* Reduced from default */
     }
 
-    .faculty-visual-wrapper {
-        width: 320px;
-        height: 320px;
-        border-radius: 50%;
-        border: 10px solid white;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-        overflow: hidden;
-        margin-bottom: 30px;
-        background: #f8f9fa;
-        flex-shrink: 0;
-    }
-
-    .faculty-circle-img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        /* ESSENTIAL for circle */
-        display: block;
-    }
-
-    .faculty-circle-placeholder {
-        width: 100%;
-        height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 80px;
-        color: #4A90E2;
-        font-weight: 800;
-        background: #f0f7ff;
-    }
-
-    /* HORIZONTAL NAME PLATE */
-    .faculty-horizontal-plate {
-        width: 650px;
-        /* Sleek horizontal width */
-        background: linear-gradient(135deg, #0D3B66 0%, #1a4f82 100%);
-        padding: 20px 40px;
-        border-radius: 24px;
-        color: white;
-        box-shadow: 0 15px 35px rgba(13, 59, 102, 0.2);
-    }
-
-    .plate-content {
-        text-align: center;
-    }
-
-    .faculty-name-title {
-        font-size: 24px;
-        font-weight: 800;
-        letter-spacing: 1px;
-        margin-bottom: 8px;
-    }
-
-    .plate-divider {
-        height: 1px;
-        background: rgba(255, 255, 255, 0.2);
-        width: 60px;
-        margin: 10px auto;
-    }
-
-    .plate-meta {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 20px;
-    }
-
-    .faculty-designation {
-        font-size: 14px;
-        font-weight: 500;
-        background: rgba(255, 255, 255, 0.1);
-        padding: 4px 16px;
-        border-radius: 20px;
-    }
-
-    .plate-icons {
-        display: flex;
-        gap: 12px;
-    }
-
-    .plate-icon-link {
-        color: white;
-        opacity: 0.8;
-        transition: 0.3s;
-    }
-
-    .plate-icon-link:hover {
-        opacity: 1;
-        transform: translateY(-2px);
-    }
-
-    /* BACK DESIGN (BIO) */
-    .modern-card-back {
+    /* Flagship Back Content (Reduced padding for max space) */
+    .flip-card-back {
         transform: rotateY(180deg);
-        padding: 60px 80px;
+        background: #fff;
         display: flex;
+        padding: 40px 60px;
+        /* Balanced padding for more width */
         align-items: center;
-    }
-
-    .back-bio-container {
         text-align: left;
     }
 
-    .back-bio-name {
+    .back-content-scroll {
+        width: 100%;
+        height: 100%;
+        /* No scroll needed now due to size, but keeping as safeguard */
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .back-name {
         font-size: 32px;
         font-weight: 800;
         color: #0D3B66;
-        margin-bottom: 5px;
+        margin-bottom: 8px;
     }
 
-    .back-bio-role {
+    .back-role {
         font-size: 16px;
         color: #4A90E2;
         font-weight: 600;
         text-transform: uppercase;
-        margin-bottom: 25px;
+        letter-spacing: 1px;
+        margin-bottom: 20px;
     }
 
-    .back-bio-divider {
-        height: 4px;
-        width: 40px;
-        background: #4A90E2;
-        margin-bottom: 25px;
-        border-radius: 2px;
-    }
-
-    .back-bio-text {
+    .back-bio {
         font-size: 15px;
         color: #555;
         line-height: 1.8;
         text-align: justify;
+        margin-bottom: 30px;
     }
 
-    /* SHARED PEOPLE GRID (PhD Scholars, etc.) */
+    .back-contact {
+        display: flex;
+        gap: 15px;
+        padding-top: 25px;
+        border-top: 1px solid #f0f0f0;
+        margin-top: auto;
+    }
+
+    .back-contact-icon {
+        width: 44px;
+        height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f8f9fa;
+        color: #0D3B66;
+        border-radius: 50%;
+        transition: 0.3s;
+    }
+
+    .back-contact-icon:hover {
+        background: #0D3B66;
+        color: white;
+        transform: translateY(-3px);
+    }
+
+    /* SHARED BASE DESIGN (Used for front side and non-faculty scholars) */
     .people-grid-standard {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -589,128 +570,200 @@
 
     /* Flagship responsive overrides */
     @media (max-width: 1023px) {
-        .faculty-modern-card {
+        .faculty-flip-card {
             width: 100%;
             height: auto;
             perspective: none;
+            /* Disable 3D for mobile stability */
         }
 
-        .modern-card-inner {
+        .flip-card-inner {
             transform: none !important;
             display: flex;
             flex-direction: column;
+            box-shadow: none;
         }
 
-        .modern-card-front,
-        .modern-card-back {
+        .flip-card-front,
+        .flip-card-back {
             position: static;
+            width: 100%;
+            height: auto;
+            transform: none !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
 
-            .faculty-footer {
-                justify-content: center;
-            }
+        .flip-card-front {
+            padding: 40px 20px;
+            margin-bottom: -20px;
+            z-index: 2;
+        }
 
-            .faculty-bio-text {
-                text-align: center;
-            }
+        .faculty-flip-card .member-photo-wrapper {
+            width: 250px;
+            height: 250px;
+        }
 
-            /* Category Headings */
-            .category-heading {
-                font-size: 24px;
-                font-weight: 700;
-                color: #0d3b66;
-                margin-bottom: 30px;
-                position: relative;
-                padding-bottom: 10px;
-                border-bottom: 3px solid #4A90E2;
-                display: inline-block;
-                text-transform: uppercase;
-                letter-spacing: 1px;
-            }
+        .flip-card-back {
+            padding: 40px 25px 30px;
+            text-align: center;
+            align-items: center;
+            margin-top: -20px;
+            padding-top: 50px;
+            z-index: 1;
+        }
 
-            .team-group {
-                margin-bottom: 80px;
-                width: 100%;
-            }
+        .back-divider {
+            margin: 15px auto;
+        }
 
-            /* Responsive Grid Logic */
-            @media (min-width: 1400px) {
-                .people-grid {
-                    grid-template-columns: repeat(4, 1fr);
-                }
-            }
+        .back-name {
+            font-size: 26px;
+            text-align: center;
+        }
 
-            @media (min-width: 1024px) and (max-width: 1399px) {
-                .people-grid {
-                    grid-template-columns: repeat(3, 1fr);
-                }
-            }
+        .back-role {
+            text-align: center;
+        }
 
-            @media (min-width: 768px) and (max-width: 1023px) {
-                .people-grid {
-                    grid-template-columns: repeat(2, 1fr);
-                    gap: 35px;
-                }
+        .back-bio {
+            text-align: center;
+            margin-bottom: 25px;
+        }
 
-                .profile-photo-wrapper {
-                    width: 180px;
-                    height: 180px;
-                }
-            }
+        .back-contact {
+            justify-content: center;
+        }
+    }
 
-            @media (max-width: 767px) {
-                .people-grid {
-                    grid-template-columns: 1fr;
-                    gap: 50px;
-                    padding: 0 15px;
-                }
+    .faculty-content-container {
+        padding: 30px;
+        text-align: center;
+    }
 
-                .profile-photo-wrapper {
-                    width: 200px;
-                    height: 200px;
-                }
+    .faculty-footer {
+        justify-content: center;
+    }
 
-                .info-box {
-                    max-width: 100%;
-                }
+    .faculty-bio-text {
+        text-align: center;
+    }
 
-                .our-people-section {
-                    padding: 40px 15px 80px;
-                }
+    /* Category Headings */
+    .category-heading {
+        font-size: 24px;
+        font-weight: 700;
+        color: #0d3b66;
+        margin-bottom: 30px;
+        position: relative;
+        padding-bottom: 10px;
+        border-bottom: 3px solid #4A90E2;
+        display: inline-block;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
 
-                .people-tabs {
-                    gap: 10px;
-                    margin-bottom: 40px;
-                }
+    .team-group {
+        margin-bottom: 80px;
+        width: 100%;
+    }
 
-                .people-tab {
-                    padding: 10px 20px;
-                    font-size: 13px;
-                }
+    /* Responsive Grid Logic */
+    @media (min-width: 1400px) {
+        .people-grid {
+            grid-template-columns: repeat(4, 1fr);
+        }
+    }
 
-                .people-grid-standard {
-                    grid-template-columns: 1fr;
-                    gap: 50px;
-                    padding: 0 15px;
-                }
+    @media (min-width: 1024px) and (max-width: 1399px) {
+        .people-grid {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
 
-                .member-photo-wrapper {
-                    width: 200px;
-                    height: 200px;
-                }
-            }
+    @media (min-width: 768px) and (max-width: 1023px) {
+        .people-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 35px;
+        }
 
-            /* Animation for filtering */
-            @keyframes fadeIn {
-                from {
-                    opacity: 0;
-                    transform: scale(0.95);
-                }
+        .profile-photo-wrapper {
+            width: 180px;
+            height: 180px;
+        }
+    }
 
-                to {
-                    opacity: 1;
-                    transform: scale(1);
-                }
-            }
+    @media (max-width: 767px) {
+        .people-grid {
+            grid-template-columns: 1fr;
+            gap: 50px;
+            padding: 0 15px;
+        }
+
+        .profile-photo-wrapper {
+            width: 200px;
+            height: 200px;
+        }
+
+        .info-box {
+            max-width: 100%;
+        }
+
+        .our-people-section {
+            padding: 40px 15px 80px;
+        }
+
+        .people-tabs {
+            gap: 10px;
+            margin-bottom: 40px;
+        }
+
+        .people-tab {
+            padding: 10px 20px;
+            font-size: 13px;
+        }
+
+        .people-grid-standard {
+            grid-template-columns: 1fr;
+            gap: 50px;
+            padding: 0 15px;
+        }
+
+        .member-photo-wrapper {
+            width: 200px;
+            height: 200px;
+        }
+    }
+
+    /* Animation for filtering */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: scale(0.95);
+        }
+
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    .person-card {
+        animation: fadeIn 0.4s ease;
+    }
+
+    /* Faculty Section - Standardized with other groups */
+    .faculty-section {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 60px 40px;
+        /* Matched to people-grid gap */
+        width: 100%;
+    }
 </style>
 
 <script>
@@ -733,7 +786,7 @@
                 group.style.animation = 'fadeIn 0.4s ease';
 
                 // Also ensure cards inside are visible
-                const cards = group.querySelectorAll('.member-base-card, .faculty-modern-card');
+                const cards = group.querySelectorAll('.member-base-card, .faculty-flip-card');
                 cards.forEach(card => card.style.display = 'block');
             } else {
                 group.style.display = 'none';
