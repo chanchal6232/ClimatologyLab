@@ -56,19 +56,18 @@
     </div>
 
     <!-- Stat Card: Workshops -->
-    <div class="col-md-2">
-        <div class="dashboard-card border-start border-4 border-warning p-3">
+    <div class="col-md-3">
+        <div class="dashboard-card border-start border-4 border-warning">
             <div class="d-flex justify-content-between align-items-center">
                 <div>
-                    <h6 class="text-muted text-uppercase small" style="font-size: 0.7rem;">Workshops</h6>
-                    <h3 class="mb-0 fw-800">{{ workshop_count }}</h3>
+                    <h6 class="text-muted text-uppercase small">Workshops</h6>
+                    <h2 class="mb-0 fw-800">{{ workshop_count }}</h2>
                 </div>
-                <div class="bg-warning bg-opacity-10 p-2 rounded-circle">
-                    <i class="bi bi-calendar-event text-warning fs-4"></i>
+                <div class="bg-warning bg-opacity-10 p-3 rounded-circle">
+                    <i class="bi bi-calendar-event text-warning fs-3"></i>
                 </div>
             </div>
-            <a href="{% url 'dashboard:workshops_list' %}" class="btn btn-sm btn-outline-warning mt-2 w-100 py-0"
-                style="font-size: 0.75rem;">Manage</a>
+            <a href="{% url 'dashboard:workshops_list' %}" class="btn btn-sm btn-outline-warning mt-3 w-100">Manage</a>
         </div>
     </div>
 
@@ -147,10 +146,16 @@
                                 <div class="fw-700">Journal Articles</div>
                                 <small class="text-muted">Academic peer-reviewed papers</small>
                             </td>
-                            <td class="text-center py-3"><span class="badge bg-primary-subtle text-primary rounded-pill px-3">{{ journal_count }}</span></td>
+                            <td class="text-center py-3"><span
+                                    class="badge bg-primary-subtle text-primary rounded-pill px-3">{{ journal_count
+                                    }}</span></td>
                             <td class="text-end py-3">
-                                <a href="{% url 'dashboard:publication_create' %}?category=journal" class="btn btn-sm btn-light border px-3 me-2" title="Add"><i class="bi bi-plus-lg text-success me-1"></i>Add</a>
-                                <a href="{% url 'dashboard:publications_list' %}?category=journal" class="btn btn-sm btn-light border px-3" title="Manage"><i class="bi bi-pencil-square text-primary me-1"></i>Manage</a>
+                                <a href="{% url 'dashboard:publication_create' %}?category=journal"
+                                    class="btn btn-sm btn-light border px-3 me-2" title="Add"><i
+                                        class="bi bi-plus-lg text-success me-1"></i>Add</a>
+                                <a href="{% url 'dashboard:publications_list' %}?category=journal"
+                                    class="btn btn-sm btn-light border px-3" title="Manage"><i
+                                        class="bi bi-pencil-square text-primary me-1"></i>Manage</a>
                             </td>
                         </tr>
 
@@ -160,10 +165,16 @@
                                 <div class="fw-700">Conference Papers</div>
                                 <small class="text-muted">Proceedings and presentations</small>
                             </td>
-                            <td class="text-center py-3"><span class="badge bg-primary-subtle text-primary rounded-pill px-3">{{ conference_count }}</span></td>
+                            <td class="text-center py-3"><span
+                                    class="badge bg-primary-subtle text-primary rounded-pill px-3">{{ conference_count
+                                    }}</span></td>
                             <td class="text-end py-3">
-                                <a href="{% url 'dashboard:publication_create' %}?category=conference" class="btn btn-sm btn-light border px-3 me-2" title="Add"><i class="bi bi-plus-lg text-success me-1"></i>Add</a>
-                                <a href="{% url 'dashboard:publications_list' %}?category=conference" class="btn btn-sm btn-light border px-3" title="Manage"><i class="bi bi-pencil-square text-primary me-1"></i>Manage</a>
+                                <a href="{% url 'dashboard:publication_create' %}?category=conference"
+                                    class="btn btn-sm btn-light border px-3 me-2" title="Add"><i
+                                        class="bi bi-plus-lg text-success me-1"></i>Add</a>
+                                <a href="{% url 'dashboard:publications_list' %}?category=conference"
+                                    class="btn btn-sm btn-light border px-3" title="Manage"><i
+                                        class="bi bi-pencil-square text-primary me-1"></i>Manage</a>
                             </td>
                         </tr>
 
@@ -173,10 +184,16 @@
                                 <div class="fw-700">Book Chapters</div>
                                 <small class="text-muted">Authored or edited sections</small>
                             </td>
-                            <td class="text-center py-3"><span class="badge bg-primary-subtle text-primary rounded-pill px-3">{{ book_count }}</span></td>
+                            <td class="text-center py-3"><span
+                                    class="badge bg-primary-subtle text-primary rounded-pill px-3">{{ book_count
+                                    }}</span></td>
                             <td class="text-end py-3">
-                                <a href="{% url 'dashboard:publication_create' %}?category=book" class="btn btn-sm btn-light border px-3 me-2" title="Add"><i class="bi bi-plus-lg text-success me-1"></i>Add</a>
-                                <a href="{% url 'dashboard:publications_list' %}?category=book" class="btn btn-sm btn-light border px-3" title="Manage"><i class="bi bi-pencil-square text-primary me-1"></i>Manage</a>
+                                <a href="{% url 'dashboard:publication_create' %}?category=book"
+                                    class="btn btn-sm btn-light border px-3 me-2" title="Add"><i
+                                        class="bi bi-plus-lg text-success me-1"></i>Add</a>
+                                <a href="{% url 'dashboard:publications_list' %}?category=book"
+                                    class="btn btn-sm btn-light border px-3" title="Manage"><i
+                                        class="bi bi-pencil-square text-primary me-1"></i>Manage</a>
                             </td>
                         </tr>
 
@@ -186,10 +203,16 @@
                                 <div class="fw-700">Books</div>
                                 <small class="text-muted">Complete monographs or guidelines</small>
                             </td>
-                            <td class="text-center py-3"><span class="badge bg-primary-subtle text-primary rounded-pill px-3">{{ book_guideline_count }}</span></td>
+                            <td class="text-center py-3"><span
+                                    class="badge bg-primary-subtle text-primary rounded-pill px-3">{{
+                                    book_guideline_count }}</span></td>
                             <td class="text-end py-3">
-                                <a href="{% url 'dashboard:publication_create' %}?category=guideline" class="btn btn-sm btn-light border px-3 me-2" title="Add"><i class="bi bi-plus-lg text-success me-1"></i>Add</a>
-                                <a href="{% url 'dashboard:publications_list' %}?category=guideline" class="btn btn-sm btn-light border px-3" title="Manage"><i class="bi bi-pencil-square text-primary me-1"></i>Manage</a>
+                                <a href="{% url 'dashboard:publication_create' %}?category=guideline"
+                                    class="btn btn-sm btn-light border px-3 me-2" title="Add"><i
+                                        class="bi bi-plus-lg text-success me-1"></i>Add</a>
+                                <a href="{% url 'dashboard:publications_list' %}?category=guideline"
+                                    class="btn btn-sm btn-light border px-3" title="Manage"><i
+                                        class="bi bi-pencil-square text-primary me-1"></i>Manage</a>
                             </td>
                         </tr>
 
@@ -199,10 +222,16 @@
                                 <div class="fw-700">Other Documents</div>
                                 <small class="text-muted">Theses, reports, and miscellaneous</small>
                             </td>
-                            <td class="text-center py-3"><span class="badge bg-primary-subtle text-primary rounded-pill px-3">{{ other_count }}</span></td>
+                            <td class="text-center py-3"><span
+                                    class="badge bg-primary-subtle text-primary rounded-pill px-3">{{ other_count
+                                    }}</span></td>
                             <td class="text-end py-3">
-                                <a href="{% url 'dashboard:publication_create' %}?category=other" class="btn btn-sm btn-light border px-3 me-2" title="Add"><i class="bi bi-plus-lg text-success me-1"></i>Add</a>
-                                <a href="{% url 'dashboard:publications_list' %}?category=other" class="btn btn-sm btn-light border px-3" title="Manage"><i class="bi bi-pencil-square text-primary me-1"></i>Manage</a>
+                                <a href="{% url 'dashboard:publication_create' %}?category=other"
+                                    class="btn btn-sm btn-light border px-3 me-2" title="Add"><i
+                                        class="bi bi-plus-lg text-success me-1"></i>Add</a>
+                                <a href="{% url 'dashboard:publications_list' %}?category=other"
+                                    class="btn btn-sm btn-light border px-3" title="Manage"><i
+                                        class="bi bi-pencil-square text-primary me-1"></i>Manage</a>
                             </td>
                         </tr>
                     </tbody>
