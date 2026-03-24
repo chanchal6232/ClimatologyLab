@@ -21,34 +21,36 @@
         <!-- Faculty Section -->
         <div class="team-group faculty-group" id="faculty-group" data-category="faculty">
             <h2 class="category-heading">Faculty</h2>
-            <div class="faculty-section-stack">
+            <div class="faculty-flow-container">
                 {% for member in faculty_members %}
-                <div class="faculty-card-container" data-category="faculty">
-                    <div class="faculty-card-main">
-                        <div class="faculty-photo-wrapper">
+                <div class="faculty-expand-row" data-category="faculty">
+                    <div class="faculty-photo-anchor">
+                        <div class="faculty-circle-wrapper">
                             {% if member.photo %}
-                            <img src="{{ member.photo.url }}" alt="{{ member.name }}" class="faculty-photo-img">
+                            <img src="{{ member.photo.url }}" alt="{{ member.name }}" class="faculty-circle-img">
                             {% else %}
-                            <div class="faculty-photo-placeholder-img">
+                            <div class="faculty-circle-placeholder">
                                 {{ member.name|first|upper }}
                             </div>
                             {% endif %}
                         </div>
 
-                        <!-- This is the bio card that reveals on hover -->
-                        <div class="faculty-bio-reveal">
-                            <h3 class="reveal-name">{{ member.name }}</h3>
-                            <p class="reveal-role">{{ member.role }}</p>
-                            <p class="reveal-bio">{{ member.bio|default:"Information coming soon..." }}</p>
+                        <!-- Minimal name plate visible when NOT hovered -->
+                        <div class="faculty-minimial-info">
+                            <h3 class="mini-name">{{ member.name|upper }}</h3>
+                            <p class="mini-role">{{ member.role }}</p>
                         </div>
+                    </div>
 
-                        <!-- This is the name plate that shows by default -->
-                        <div class="faculty-default-plate">
-                            <h3 class="plate-name">{{ member.name|upper }}</h3>
-                            <p class="plate-role">{{ member.role }}</p>
-                            <div class="plate-icons">
-                                <a href="mailto:{{ member.email }}" class="plate-icon">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    <div class="faculty-bio-flow-card">
+                        <div class="faculty-full-content">
+                            <h3 class="full-name">{{ member.name }}</h3>
+                            <p class="full-role">{{ member.role }}</p>
+                            <p class="full-bio">{{ member.bio|default:"Information coming soon..." }}</p>
+
+                            <div class="full-contact">
+                                <a href="mailto:{{ member.email }}" class="full-contact-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                         stroke-width="2">
                                         <path
                                             d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
@@ -56,8 +58,8 @@
                                     </svg>
                                 </a>
                                 {% if member.linkedin_url %}
-                                <a href="{{ member.linkedin_url }}" target="_blank" class="plate-icon">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                <a href="{{ member.linkedin_url }}" target="_blank" class="full-contact-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
                                         <path
                                             d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
                                     </svg>
@@ -309,214 +311,212 @@
         position: relative;
     }
 
-    /* Faculty Section - Stacked for safety, Expanding for Style */
-    .faculty-section-stack {
+    /* Faculty Section - NEW FLOW-BASED EXPANSION (NO OVERFLOW) */
+    .faculty-flow-container {
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 60px;
+        gap: 40px;
         width: 100%;
         margin-top: 30px;
     }
 
-    .faculty-card-container {
-        width: 280px;
-        /* Small footprint in the flow */
-        height: 400px;
-        position: relative;
+    .faculty-expand-row {
         display: flex;
-        justify-content: center;
-        z-index: 10;
-    }
-
-    .faculty-card-main {
-        position: absolute;
-        width: 250px;
-        height: 250px;
-        display: flex;
-        justify-content: center;
         align-items: center;
-        transition: all 0.7s cubic-bezier(0.165, 0.84, 0.44, 1);
+        justify-content: center;
+        width: 100%;
+        min-height: 250px;
+        position: relative;
+        transition: all 0.5s ease;
     }
 
-    .faculty-photo-wrapper {
+    .faculty-photo-anchor {
+        flex-shrink: 0;
+        z-index: 20;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 250px;
+        transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+    }
+
+    .faculty-circle-wrapper {
         width: 220px;
         height: 220px;
         border-radius: 50%;
         overflow: hidden;
+        background: white;
         border: 4px solid white;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        z-index: 20;
-        transition: all 0.7s cubic-bezier(0.165, 0.84, 0.44, 1);
-        background: white;
         position: relative;
     }
 
-    .faculty-photo-img {
+    .faculty-circle-img {
         width: 100%;
         height: 100%;
         object-fit: cover;
     }
 
-    /* Default plate below photo */
-    .faculty-default-plate {
-        position: absolute;
-        top: 230px;
+    .faculty-circle-placeholder {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #4A90E2 0%, #0D3B66 100%);
+        color: white;
+        font-size: 60px;
+        font-weight: 700;
+    }
+
+    /* Minimal Info - Default visible */
+    .faculty-minimial-info {
+        margin-top: 15px;
         background: linear-gradient(135deg, #4A90E2 0%, #0D3B66 100%);
         padding: 10px 20px;
-        border-radius: 12px;
+        border-radius: 10px;
         color: white;
-        width: 220px;
+        width: 200px;
         text-align: center;
-        box-shadow: 0 5px 15px rgba(13, 59, 102, 0.2);
         transition: all 0.4s ease;
-        z-index: 5;
+        opacity: 1;
     }
 
-    .plate-name {
+    .mini-name {
         font-size: 14px;
         font-weight: 700;
-        margin-bottom: 2px;
+        margin: 0;
     }
 
-    .plate-role {
+    .mini-role {
         font-size: 11px;
-        color: rgba(255, 255, 255, 0.9);
-        margin-bottom: 8px;
+        opacity: 0.9;
+        margin: 5px 0 0 0;
     }
 
-    .plate-icons {
-        display: flex;
-        justify-content: center;
-        gap: 8px;
-        padding-top: 5px;
-        border-top: 1px solid rgba(255, 255, 255, 0.2);
-    }
-
-    .plate-icon {
-        color: white;
-        opacity: 0.8;
-        transition: 0.3s;
-    }
-
-    .plate-icon:hover {
-        opacity: 1;
-        transform: translateY(-2px);
-    }
-
-    /* The Secret Bio Card - Reveals on Hover */
-    .faculty-bio-reveal {
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%) scale(0.8);
-        width: 0;
-        height: auto;
-        min-height: 280px;
-        background: white;
-        padding: 40px;
-        border-radius: 140px 40px 40px 140px;
-        /* Matching the circle */
+    /* Bio Card - IN THE DOCUMENT FLOW */
+    .faculty-bio-flow-card {
+        max-width: 0;
+        width: 100%;
         opacity: 0;
         visibility: hidden;
-        transition: all 0.7s cubic-bezier(0.165, 0.84, 0.44, 1);
-        box-shadow: 0 30px 70px rgba(0, 0, 0, 0.15);
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        z-index: 15;
         overflow: hidden;
-        text-align: left;
+        /* Critical for slide effect */
+        background: white;
+        border-radius: 0 40px 40px 0;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+        transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+        margin-left: -110px;
+        /* Half of circle radius for overlap */
+        z-index: 10;
+        height: auto;
     }
 
-    .reveal-name {
-        font-size: 24px;
+    .faculty-full-content {
+        padding: 50px 60px 40px 140px;
+        /* Extra left padding to clear circle */
+        min-width: 800px;
+        /* Ensures text doesn't wrap awkwardly during expansion */
+    }
+
+    .full-name {
+        font-size: 26px;
         font-weight: 800;
         color: #0D3B66;
         margin-bottom: 5px;
     }
 
-    .reveal-role {
+    .full-role {
         font-size: 14px;
         color: #4A90E2;
         font-weight: 600;
-        margin-bottom: 15px;
+        margin-bottom: 20px;
         text-transform: uppercase;
+        letter-spacing: 1px;
     }
 
-    .reveal-bio {
+    .full-bio {
         font-size: 14px;
         color: #555;
-        line-height: 1.7;
-        margin: 0;
+        line-height: 1.8;
+        margin-bottom: 25px;
+        text-align: justify;
     }
 
-    /* HOVER STATE - THE MAGIC */
+    .full-contact {
+        display: flex;
+        gap: 15px;
+        border-top: 1px solid #f0f0f0;
+        padding-top: 20px;
+    }
+
+    .full-contact-icon {
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f8f9fa;
+        color: #0D3B66;
+        border-radius: 50%;
+        transition: 0.3s;
+    }
+
+    .full-contact-icon:hover {
+        background: #0D3B66;
+        color: white;
+        transform: translateY(-3px);
+    }
+
+    /* DESKTOP HOVER - THE FIX */
     @media (min-width: 1024px) {
-        .faculty-card-container:hover {
-            z-index: 100;
+        .faculty-expand-row:hover .faculty-photo-anchor {
+            transform: translateX(-400px);
+            /* Move left anchor to make room */
         }
 
-        .faculty-card-container:hover .faculty-card-main {
-            transform: translateX(0);
-            /* Keep it stable */
-        }
-
-        .faculty-card-container:hover .faculty-photo-wrapper {
-            transform: translate(-425px, 0) scale(1.1);
-            /* Exactly on the edge of the 850px card */
-            box-shadow: 0 15px 45px rgba(0, 0, 0, 0.2);
-        }
-
-        .faculty-card-container:hover .faculty-bio-reveal {
-            width: 850px;
-            opacity: 1;
-            visibility: visible;
-            transform: translate(-50%, -50%) scale(1);
-            /* Center the card */
-            padding-left: 130px;
-            /* Radius is 110px, so 130px gives breathing room */
-            padding-right: 60px;
-        }
-
-        .faculty-card-container:hover .faculty-default-plate {
+        .faculty-expand-row:hover .faculty-minimial-info {
             opacity: 0;
             visibility: hidden;
-            transform: translateY(20px);
+        }
+
+        .faculty-expand-row:hover .faculty-bio-flow-card {
+            max-width: 1000px;
+            opacity: 1;
+            visibility: visible;
+            /* Since it's in the flow, the parent row expands, PhD scholars section moves down! */
         }
     }
 
-    /* Mobile handling - no hover reveal, just simple layout */
+    /* Mobile handling - Stays in flow naturally */
     @media (max-width: 1023px) {
-        .faculty-card-container {
-            width: 100%;
-            height: auto;
-            margin-bottom: 40px;
-        }
-
-        .faculty-card-main {
-            position: static;
-            width: 100%;
-            height: auto;
+        .faculty-expand-row {
             flex-direction: column;
+            height: auto;
         }
 
-        .faculty-bio-reveal {
-            position: static;
+        .faculty-photo-anchor {
             width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .faculty-minimial-info {
+            display: none;
+        }
+
+        .faculty-bio-flow-card {
+            max-width: 100%;
             opacity: 1;
             visibility: visible;
-            transform: none !important;
+            margin-left: 0;
             border-radius: 20px;
-            padding: 30px;
-            box-shadow: none;
-            border: 1px solid #eee;
-            margin-top: -100px;
-            padding-top: 110px;
+            padding-top: 20px;
         }
 
-        .faculty-default-plate {
-            display: none;
+        .faculty-full-content {
+            padding: 30px;
+            min-width: 0;
         }
     }
 
@@ -759,8 +759,8 @@
                 group.style.display = 'block';
                 group.style.animation = 'fadeIn 0.4s ease';
 
-                // Also ensure cards inside are visible (if they were hidden by a previous specific filter)
-                const cards = group.querySelectorAll('.person-card, .faculty-card-container');
+                // Also ensure cards inside are visible
+                const cards = group.querySelectorAll('.person-card, .faculty-expand-row');
                 cards.forEach(card => card.style.display = 'flex');
             } else {
                 group.style.display = 'none';
