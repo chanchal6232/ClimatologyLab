@@ -400,21 +400,21 @@
     .faculty-flip-card {
         background-color: transparent;
         width: 1000px;
-        /* flagship width */
-        height: 520px;
-        /* Reduced height and adjusted width */
+        height: 480px;
+        /* More compact height */
         perspective: 2000px;
         cursor: pointer;
     }
 
     /* SPECIFICALLY MAKE FACULTY PHOTO BIGGER */
     .faculty-flip-card .member-photo-wrapper {
-        width: 320px;
-        height: 320px;
+        width: 400px;
+        /* Highly Centric Size */
+        height: 400px;
     }
 
     .faculty-flip-card .member-photo-placeholder {
-        font-size: 80px;
+        font-size: 100px;
     }
 
     .flip-card-inner {
@@ -444,21 +444,24 @@
         border: 1px solid rgba(0, 0, 0, 0.03);
     }
 
-    /* Standardized Front Facade */
+    /* TIGHTER FRONT FACADE (75% Padding Reduction) */
     .flip-card-front {
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
         background: #fff;
+        padding: 20px;
+        /* Reduced from default */
     }
 
-    /* Flagship Back Content (Visible at once) */
+    /* Flagship Back Content (Reduced padding for max space) */
     .flip-card-back {
         transform: rotateY(180deg);
         background: #fff;
         display: flex;
-        padding: 60px 80px;
+        padding: 25px 35px;
+        /* Reduced by ~75% from previous large padding */
         align-items: center;
         text-align: left;
     }
