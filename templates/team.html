@@ -23,52 +23,54 @@
             <h2 class="category-heading">Faculty</h2>
             <div class="faculty-flip-grid">
                 {% for member in faculty_members %}
-                <div class="faculty-flip-card" data-category="faculty">
-                    <div class="flip-card-inner">
-                        <!-- FRONT SIDE (Normal UI) -->
-                        <div class="flip-card-front">
-                            <div class="member-photo-wrapper">
-                                {% if member.photo %}
-                                <img src="{{ member.photo.url }}" alt="{{ member.name }}" class="member-photo">
-                                {% else %}
-                                <div class="member-photo-placeholder">
-                                    {{ member.name|first|upper }}
-                                </div>
-                                {% endif %}
+                <div class="faculty-expand-card" data-category="faculty">
+                    <!-- LEFT SIDE: Profile Column (Visible by default) -->
+                    <div class="card-left-side">
+                        <div class="member-photo-wrapper">
+                            {% if member.photo %}
+                            <img src="{{ member.photo.url }}" alt="{{ member.name }}" class="member-photo">
+                            {% else %}
+                            <div class="member-photo-placeholder">
+                                {{ member.name|first|upper }}
                             </div>
-                            <div class="member-info-plate">
-                                <h3 class="member-name-text">{{ member.name|upper }}</h3>
-                                <p class="member-role-text">{{ member.role }}</p>
-                                <div class="member-contact-links">
-                                    <a href="mailto:{{ member.email }}" class="member-contact-icon">
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-                                            stroke="currentColor" stroke-width="2">
-                                            <path
-                                                d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-                                            <polyline points="22,6 12,13 2,6" />
-                                        </svg>
-                                    </a>
-                                    {% if member.linkedin_url %}
-                                    <a href="{{ member.linkedin_url }}" target="_blank" class="member-contact-icon">
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                                            <path
-                                                d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
-                                        </svg>
-                                    </a>
-                                    {% endif %}
-                                </div>
-                            </div>
+                            {% endif %}
                         </div>
+                        <div class="collapsed-nameplate">
+                            <h3>{{ member.name|upper }}</h3>
+                        </div>
+                    </div>
 
-                        <!-- BACK SIDE (Introductory Part) -->
-                        <div class="flip-card-back">
-                            <div class="back-content-scroll">
-                                <h3 class="back-name">{{ member.name }}</h3>
-                                <p class="back-role">{{ member.role }}</p>
-                                <div class="back-divider"></div>
-                                <p class="back-bio">{{ member.bio|default:"Information coming soon..." }}</p>
+                    <!-- RIGHT SIDE: Information Column (Expands on hover) -->
+                    <div class="card-right-side">
+                        <h3 class="expanded-name">{{ member.name }}</h3>
+                        <div class="expanded-role">{{ member.role }}</div>
+                        <p class="expanded-bio">{{ member.bio|default:"Researching the intersection of climate, urban
+                            environments, and human resilience. Part of the Climatology Lab faculty group." }}</p>
 
-                            </div>
+                        <div class="expanded-footer">
+                            <a href="mailto:{{ member.email }}" class="expanded-icon" title="Send Email">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path
+                                        d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                                    <polyline points="22,6 12,13 2,6" />
+                                </svg>
+                            </a>
+                            {% if member.linkedin_url %}
+                            <a href="{{ member.linkedin_url }}" target="_blank" class="expanded-icon"
+                                title="LinkedIn Profile">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                    <path
+                                        d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+                                </svg>
+                            </a>
+                            {% endif %}
+                            {% if member.google_scholar_url %}
+                            <a href="{{ member.google_scholar_url }}" target="_blank" class="expanded-icon"
+                                title="Google Scholar">
+                                <i class="ai ai-google-scholar fs-5"></i>
+                            </a>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -386,182 +388,214 @@
         transform: translateY(-2px);
     }
 
-    /* FACULTY SECTION - FLAGGSHIP CENTRIC DESIGN (NO SCROLL) */
+    /* FACULTY SECTION - HORIZONTAL EXPANDING DESIGN */
     .faculty-flip-grid {
         display: flex;
         flex-direction: column;
         align-items: center;
         gap: 40px;
-        /* Tighter gap */
         width: 100%;
-        margin-top: 20px;
+        margin-top: 40px;
+        perspective: none;
+        /* Removed for non-flip design */
     }
 
-    .faculty-flip-card {
-        background-color: transparent;
-        width: 1000px;
-        height: 420px;
-        /* Reduced vertical footprint */
-        perspective: 2000px;
-        cursor: pointer;
-    }
-
-    /* PERFECT CIRCLE PROFILE (SMALLER & CENTRIC) */
-    .faculty-flip-card .member-photo-wrapper {
-        width: 220px !important;
-        height: 220px !important;
-        aspect-ratio: 1/1;
-        border-radius: 50%;
-        margin-bottom: 25px;
-        /* Spacing between circle and plate */
-    }
-
-    .faculty-flip-card .member-photo {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        border-radius: 50%;
-    }
-
-    .faculty-flip-card .member-photo-placeholder {
-        font-size: 50px;
-    }
-
-    /* LONG HORIZONTAL NAMEPLATE (FIT TO TEXT) */
-    .faculty-flip-card .member-info-plate {
-        width: fit-content;
-        /* Dynamic width */
-        min-width: 450px;
-        /* Minimum presence */
-        max-width: 850px;
-        /* Prevent card overflow */
-        height: auto;
-        padding: 15px 60px;
-        /* Generous horizontal padding */
-        flex-direction: column;
-        border-radius: 20px;
-    }
-
-    .faculty-flip-card .member-name-text {
-        font-size: 20px;
-        /* Balanced size */
-        white-space: nowrap;
-    }
-
-    .faculty-flip-card .member-contact-links {
-        margin-top: 10px;
-        justify-content: center;
-    }
-
-    .flip-card-inner {
-        position: relative;
-        width: 100%;
-        height: 100%;
-        text-align: center;
-        transition: transform 0.9s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        transform-style: preserve-3d;
+    .faculty-expand-card {
+        width: 350px;
+        /* Initial Collapsed Width */
+        height: 380px;
+        background: #fff;
         border-radius: 40px;
-        box-shadow: 0 20px 80px rgba(0, 0, 0, 0.1);
-    }
-
-    .faculty-flip-card:hover .flip-card-inner {
-        transform: rotateY(180deg);
-    }
-
-    .flip-card-front,
-    .flip-card-back {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        backface-visibility: hidden;
-        border-radius: 40px;
+        display: flex;
         overflow: hidden;
-        background: white;
-        border: 1px solid rgba(0, 0, 0, 0.03);
+        transition: width 0.7s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.4s ease;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.06);
+        cursor: pointer;
+        position: relative;
     }
 
-    /* TIGHTER FRONT FACADE (75% Padding Reduction) */
-    .flip-card-front {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        background: #fff;
-        padding: 20px;
-        /* Reduced from default */
+    .faculty-expand-card:hover {
+        width: 1050px;
+        /* Expanded Full Width */
+        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.12);
     }
 
-    /* Flagship Back Content (Reduced padding for max space) */
-    .flip-card-back {
-        transform: rotateY(180deg);
-        background: #fff;
-        display: flex;
-        padding: 40px 60px;
-        /* Balanced padding for more width */
-        align-items: center;
-        text-align: left;
-    }
-
-    .back-content-scroll {
-        width: 100%;
+    /* Branded Left Panel (Matches Blue/Dark Lab Theme) */
+    .card-left-side {
+        min-width: 350px;
+        max-width: 350px;
         height: 100%;
-        /* No scroll needed now due to size, but keeping as safeguard */
+        background: linear-gradient(145deg, #0d3b66, #051b2e);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        z-index: 2;
+        padding: 30px;
+        border-radius: 40px;
+        color: white;
+    }
+
+    .faculty-expand-card .member-photo-wrapper {
+        width: 180px !important;
+        height: 180px !important;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        padding: 8px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        margin-bottom: 25px;
+        transition: 0.5s ease;
+    }
+
+    .faculty-expand-card:hover .member-photo-wrapper {
+        transform: scale(1.05);
+    }
+
+    /* Name Plate on Collapsed View */
+    .collapsed-nameplate {
+        text-align: center;
+        max-width: 80%;
+    }
+
+    .collapsed-nameplate h3 {
+        font-size: 18px;
+        font-weight: 700;
+        margin: 0;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    /* Informational Right Panel (Emerges on Hover) */
+    .card-right-side {
+        flex: 1;
+        background: white;
+        padding: 40px 60px;
         display: flex;
         flex-direction: column;
         justify-content: center;
+        opacity: 0;
+        transform: translateX(30px);
+        transition: opacity 0.4s ease 0.2s, transform 0.5s ease 0.2s;
+        visibility: hidden;
+        white-space: normal;
     }
 
-    .back-name {
-        font-size: 32px;
+    .faculty-expand-card:hover .card-right-side {
+        opacity: 1;
+        transform: translateX(0);
+        visibility: visible;
+    }
+
+    .expanded-name {
+        font-size: 30px;
         font-weight: 800;
-        color: #0D3B66;
+        color: #0d3b66;
         margin-bottom: 8px;
     }
 
-    .back-role {
-        font-size: 16px;
+    .expanded-role {
+        font-size: 15px;
         color: #4A90E2;
         font-weight: 600;
         text-transform: uppercase;
-        letter-spacing: 1px;
-        margin-bottom: 20px;
+        letter-spacing: 1.5px;
+        margin-bottom: 25px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
     }
 
-    .back-bio {
+    .expanded-role::after {
+        content: "";
+        height: 2px;
+        width: 30px;
+        background: #4A90E2;
+    }
+
+    .expanded-bio {
         font-size: 15px;
         color: #555;
         line-height: 1.8;
-        text-align: justify;
         margin-bottom: 30px;
+        display: -webkit-box;
+        line-clamp: 6;
+        -webkit-line-clamp: 6;
+        /* Control max bio height */
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-align: justify;
     }
 
-    .back-contact {
+    .expanded-footer {
         display: flex;
-        gap: 15px;
+        align-items: center;
+        gap: 20px;
         padding-top: 25px;
         border-top: 1px solid #f0f0f0;
-        margin-top: auto;
     }
 
-    .back-contact-icon {
+    .expanded-icon {
         width: 44px;
         height: 44px;
+        border-radius: 50%;
+        background: #f8f9fa;
+        color: #0d3b66;
         display: flex;
         align-items: center;
         justify-content: center;
-        background: #f8f9fa;
-        color: #0D3B66;
-        border-radius: 50%;
         transition: 0.3s;
+        text-decoration: none !important;
     }
 
-    .back-contact-icon:hover {
-        background: #0D3B66;
+    .expanded-icon:hover {
+        background: #0d3b66;
         color: white;
-        transform: translateY(-3px);
+        transform: translateY(-4px);
     }
 
-    /* SHARED BASE DESIGN (Used for front side and non-faculty scholars) */
+    /* Mobile Overrides (Static Non-Expanding Card) */
+    @media (max-width: 1023px) {
+        .faculty-expand-card {
+            width: 100% !important;
+            height: auto;
+            flex-direction: column;
+            border-radius: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        .card-left-side {
+            min-width: 100%;
+            padding: 40px 20px;
+            border-radius: 25px 25px 0 0;
+        }
+
+        .card-right-side {
+            opacity: 1 !important;
+            transform: none !important;
+            visibility: visible !important;
+            padding: 30px 20px;
+            text-align: center;
+        }
+
+        .expanded-role {
+            justify-content: center;
+        }
+
+        .expanded-role::after {
+            display: none;
+        }
+
+        .expanded-footer {
+            justify-content: center;
+        }
+
+        .expanded-bio {
+            line-clamp: unset;
+            -webkit-line-clamp: unset;
+        }
+    }
+
+    /* SHARED BASE DESIGN */
     .people-grid-standard {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
