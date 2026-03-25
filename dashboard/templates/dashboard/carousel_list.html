@@ -1,35 +1,28 @@
 {% extends 'dashboard/base.html' %}
-
 {% block title %}Manage Carousel{% endblock %}
 {% block header_title %}Hero Carousel Images{% endblock %}
-
 {% block content %}
 <div class="dashboard-card border-0 shadow-sm">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h5 class="fw-700 mb-0">Existing Carousel Images</h5>
         <div class="d-flex gap-2">
             <form class="d-flex me-2" method="get">
-                <input class="form-control form-control-sm me-2" type="search" name="q" placeholder="Search images..."
-                    value="{{ query|default:'' }}">
+                <input class="form-control form-control-sm me-2" type="search" name="q" placeholder="Search images..." value="{{ query|default:'' }}">
                 <button class="btn btn-sm btn-outline-primary" type="submit">Search</button>
             </form>
-            <button type="submit" form="bulkDeleteForm" class="btn btn-danger btn-sm d-flex align-items-center gap-2"
-                onclick="return confirm('Are you sure you want to delete the selected images?');">
+            <button type="submit" form="bulkDeleteForm" class="btn btn-danger btn-sm d-flex align-items-center gap-2" onclick="return confirm('Are you sure you want to delete the selected images?');">
                 <i class="bi bi-trash"></i> Delete Selected
             </button>
-            <a href="{% url 'dashboard:carousel_create' %}"
-                class="btn btn-primary d-flex align-items-center gap-2 px-4 btn-sm">
+            <a href="{% url 'dashboard:carousel_create' %}" class="btn btn-primary d-flex align-items-center gap-2 px-4 btn-sm">
                 <i class="bi bi-plus-lg"></i> Add New Image
             </a>
         </div>
     </div>
-
     <form id="bulkDeleteForm" action="{% url 'dashboard:bulk_delete' %}" method="post">
         {% csrf_token %}
         <input type="hidden" name="app_label" value="core">
         <input type="hidden" name="model_name" value="CarouselImage">
         <input type="hidden" name="next" value="{{ request.get_full_path }}">
-
         <div class="table-responsive">
             <table class="table table-hover align-middle border-top">
                 <thead class="table-light">
@@ -45,94 +38,45 @@
                 <tbody>
                     {% for image in images %}
                     <tr>
-                        <td><input type="checkbox" class="form-check-input item-checkbox" name="item_ids"
-                                value="{{ image.pk }}"></td>
+                        <td><input type="checkbox" class="form-check-input item-checkbox" name="item_ids" value="{{ image.pk }}"></td>
                         <td>
                             {% if image.image %}
-                            <img src="{{ image.image.url }}" class="rounded shadow-sm"
-                                style="width: 80px; height: 50px; object-fit: cover;">
+                            <img src="{{ image.image.url }}" class="rounded shadow-sm" style="width: 80px; height: 50px; object-fit: cover;">
                             {% else %}
-                            <div class="bg-light rounded d-flex align-items-center justify-content-center border"
-                                style="width: 80px; height: 50px;">
-                                <i class="bi bi-image text-muted"></i>
-                            </div>
+                            <div class="bg-light rounded d-flex align-items-center justify-content-center border" style="width: 80px; height: 50px;"><i class="bi bi-image text-muted"></i></div>
                             {% endif %}
                         </td>
                         <td>
                             <div class="fw-600 text-dark">{{ image.title }}</div>
-                            {% if image.alt_text %}
-                            <div class="small text-muted mb-1">Alt: {{ image.alt_text }}</div>
-                            {% endif %}
-                            <div class="small text-muted" style="font-size: 0.75rem;">Added: {{ image.created_at|date:"d
-                                M
-                                Y" }}</div>
+                            {% if image.alt_text %}<div class="small text-muted mb-1">Alt: {{ image.alt_text }}</div>{% endif %}
+                            <div class="small text-muted" style="font-size: 0.75rem;">Added: {{ image.created_at|date:"d M Y" }}</div>
                         </td>
+                        <td><span class="badge rounded-pill bg-light text-dark border fw-500">{{ image.order }}</span></td>
                         <td>
-                            <span class="badge rounded-pill bg-light text-dark border fw-500">
-                                {{ image.order }}
-                            </span>
-                        </td>
-                        <td>
-                            {% if image.is_active %}
-                            <span
-                                class="badge rounded-pill bg-success-subtle text-success border border-success-subtle">Active</span>
-                            {% else %}
-                            <span
-                                class="badge rounded-pill bg-secondary-subtle text-secondary border border-secondary-subtle">Inactive</span>
-                            {% endif %}
+                            {% if image.is_active %}<span class="badge rounded-pill bg-success-subtle text-success border border-success-subtle">Active</span>{% else %}<span class="badge rounded-pill bg-secondary-subtle text-secondary border border-secondary-subtle">Inactive</span>{% endif %}
                         </td>
                         <td class="text-end">
                             <div class="btn-group">
-                                <a href="{% url 'dashboard:carousel_edit' image.pk %}"
-                                    class="btn btn-sm btn-outline-secondary px-3" title="Edit">
-                                    <i class="bi bi-pencil"></i>
-                                </a>
-                                <a href="{% url 'dashboard:carousel_delete' image.pk %}"
-                                    class="btn btn-sm btn-outline-danger px-3" title="Delete"
-                                    onclick="event.preventDefault(); if(confirm('Permanently delete this carousel image?')) { document.getElementById('delete-form-{{ image.pk }}').submit(); }">
-                                    <i class="bi bi-trash"></i>
-                                </a>
+                                <a href="{% url 'dashboard:carousel_edit' image.pk %}" class="btn btn-sm btn-outline-secondary px-3" title="Edit"><i class="bi bi-pencil"></i></a>
+                                <a href="{% url 'dashboard:carousel_delete' image.pk %}" class="btn btn-sm btn-outline-danger px-3" title="Delete" onclick="event.preventDefault(); if(confirm('Permanently delete this carousel image?')) { document.getElementById('delete-form-{{ image.pk }}').submit(); }"><i class="bi bi-trash"></i></a>
                             </div>
                         </td>
                     </tr>
                     {% empty %}
-                    <tr>
-                        <td colspan="6" class="text-center py-5">
-                            <div class="mb-3 text-muted">
-                                <i class="bi bi-images" style="font-size: 3rem;"></i>
-                            </div>
-                            <h6 class="fw-700">No Carousel Images Found</h6>
-                            <p class="text-muted small">The website is currently using default static images.</p>
-                            <a href="{% url 'dashboard:carousel_create' %}" class="btn btn-sm btn-primary mt-2">Add New
-                                Image</a>
-                        </td>
-                    </tr>
+                    <tr><td colspan="6" class="text-center py-5"><h6 class="fw-700">No Carousel Images Found</h6><p class="text-muted small">Website currently using default static images.</p></td></tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
     </form>
-
     {% for image in images %}
-    <form id="delete-form-{{ image.pk }}" action="{% url 'dashboard:carousel_delete' image.pk %}" method="post"
-        class="d-none">
-        {% csrf_token %}
-    </form>
+    <form id="delete-form-{{ image.pk }}" action="{% url 'dashboard:carousel_delete' image.pk %}" method="post" class="d-none">{% csrf_token %}</form>
     {% endfor %}
 </div>
-
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const selectAll = document.getElementById('selectAll');
-        const checkboxes = document.querySelectorAll('.item-checkbox');
-
-        if (selectAll) {
-            selectAll.addEventListener('change', function () {
-                checkboxes.forEach(cb => {
-                    cb.checked = selectAll.checked;
-                });
-            });
-        }
+        if (selectAll) { selectAll.addEventListener('change', function () { document.querySelectorAll('.item-checkbox').forEach(cb => { cb.checked = selectAll.checked; }); }); }
     });
 </script>
 {% endblock %}

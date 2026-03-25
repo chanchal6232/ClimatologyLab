@@ -1,8 +1,6 @@
 {% extends 'dashboard/base.html' %}
-
 {% block title %}Manage Publications{% endblock %}
 {% block header_title %}Publications{% endblock %}
-
 {% block content %}
 <div class="dashboard-card border-0 shadow-sm">
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
@@ -17,67 +15,49 @@
                     placeholder="Search publications..." value="{{ query|default:'' }}">
                 <button class="btn btn-sm btn-outline-primary" type="submit">Search</button>
             </form>
-
             <a href="{% url 'dashboard:import_data' 'publications' %}"
-                class="btn btn-outline-primary btn-sm d-flex align-items-center gap-2">
-                <i class="bi bi-cloud-arrow-up"></i> Import
-            </a>
-
+                class="btn btn-outline-primary btn-sm d-flex align-items-center gap-2"><i
+                    class="bi bi-cloud-arrow-up"></i> Import</a>
             <div class="btn-group">
                 <button type="button" class="btn btn-primary btn-sm dropdown-toggle d-flex align-items-center gap-2"
-                    data-bs-toggle="dropdown">
-                    <i class="bi bi-plus-lg"></i> Add New
-                </button>
+                    data-bs-toggle="dropdown"><i class="bi bi-plus-lg"></i> Add New</button>
                 <ul class="dropdown-menu dropdown-menu-end shadow border-0">
                     <li>
                         <h6 class="dropdown-header">Select Category</h6>
                     </li>
                     {% for cat_key, cat_label in categories %}
-                    <li><a class="dropdown-item" href="{% url 'dashboard:publication_create' %}?category={{ cat_key }}">
-                            <i class="bi bi-file-earmark-plus me-2"></i>{{ cat_label }}
-                        </a></li>
+                    <li><a class="dropdown-item"
+                            href="{% url 'dashboard:publication_create' %}?category={{ cat_key }}"><i
+                                class="bi bi-file-earmark-plus me-2"></i>{{ cat_label }}</a></li>
                     {% endfor %}
                     <li>
                         <hr class="dropdown-divider">
                     </li>
-                    <li><a class="dropdown-item" href="{% url 'dashboard:publication_create' %}">
-                            <i class="bi bi-plus-circle me-2"></i>General Publication
-                        </a></li>
+                    <li><a class="dropdown-item" href="{% url 'dashboard:publication_create' %}"><i
+                                class="bi bi-plus-circle me-2"></i>General Publication</a></li>
                 </ul>
             </div>
-
             <button type="submit" form="bulkDeleteForm"
                 class="btn btn-outline-danger btn-sm d-flex align-items-center gap-2"
-                onclick="return confirm('Are you sure you want to delete the selected publications?');">
-                <i class="bi bi-trash"></i> Delete Selected
-            </button>
+                onclick="return confirm('Are you sure you want to delete the selected publications?');"><i
+                    class="bi bi-trash"></i> Delete Selected</button>
         </div>
     </div>
-
-    <!-- Category Filter Tabs -->
     <ul class="nav nav-tabs border-bottom mb-4">
-        <li class="nav-item">
-            <a class="nav-link {% if current_category == 'all' %}active fw-700{% endif %}"
-                href="{% url 'dashboard:publications_list' %}?category=all{% if query %}&q={{ query }}{% endif %}">
-                All <span class="badge rounded-pill bg-secondary ms-1">{{ total_count|default:'' }}</span>
-            </a>
-        </li>
+        <li class="nav-item"><a class="nav-link {% if current_category == 'all' %}active fw-700{% endif %}"
+                href="{% url 'dashboard:publications_list' %}?category=all{% if query %}&q={{ query }}{% endif %}">All
+                <span class="badge rounded-pill bg-secondary ms-1">{{ total_count|default:'' }}</span></a></li>
         {% for cat_key, cat_label in categories %}
-        <li class="nav-item">
-            <a class="nav-link {% if current_category == cat_key %}active fw-700{% endif %}"
-                href="{% url 'dashboard:publications_list' %}?category={{ cat_key }}{% if query %}&q={{ query }}{% endif %}">
-                {{ cat_label }}
-            </a>
-        </li>
+        <li class="nav-item"><a class="nav-link {% if current_category == cat_key %}active fw-700{% endif %}"
+                href="{% url 'dashboard:publications_list' %}?category={{ cat_key }}{% if query %}&q={{ query }}{% endif %}">{{
+                cat_label }}</a></li>
         {% endfor %}
     </ul>
-
     <form id="bulkDeleteForm" action="{% url 'dashboard:bulk_delete' %}" method="post">
         {% csrf_token %}
         <input type="hidden" name="app_label" value="publications">
         <input type="hidden" name="model_name" value="Publication">
         <input type="hidden" name="next" value="{{ request.get_full_path }}">
-
         <div class="table-responsive">
             <table class="table table-hover align-middle border-top">
                 <thead class="table-light">
@@ -96,46 +76,38 @@
                         <td><input type="checkbox" class="form-check-input item-checkbox" name="item_ids"
                                 value="{{ pub.pk }}"></td>
                         <td>
-                            <div class="fw-600 text-dark">{{ pub.title|truncatechars:100 }}</div>
-                            <small class="text-muted">{{ pub.authors|truncatechars:80 }}</small>
+                            <div class="fw-600 text-dark">{{ pub.title|truncatechars:100 }}</div><small
+                                class="text-muted">{{ pub.authors|truncatechars:80 }}</small>
                         </td>
-                        <td>
-                            <span class="badge bg-info-subtle text-info border border-info-subtle rounded-pill">
-                                {{ pub.get_category_display }}
-                            </span>
-                        </td>
+                        <td><span class="badge bg-info-subtle text-info border border-info-subtle rounded-pill">{{
+                                pub.get_category_display }}</span></td>
                         <td>{{ pub.publication_date|date:"b d, Y" }}</td>
                         <td>
-                            {% if pub.is_active %}
-                            <span
-                                class="badge bg-success-subtle text-success border border-success-subtle rounded-pill">Active</span>
-                            {% else %}
-                            <span
-                                class="badge bg-warning-subtle text-warning border border-warning-subtle rounded-pill">Hidden</span>
-                            {% endif %}
-                            {% if pub.is_featured %}
-                            <span
-                                class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill">Featured</span>
-                            {% endif %}
+                            {% if pub.is_active %}<span
+                                class="badge bg-success-subtle text-success border border-success-subtle rounded-pill">Active</span>{%
+                            else %}<span
+                                class="badge bg-warning-subtle text-warning border border-warning-subtle rounded-pill">Hidden</span>{%
+                            endif %}
+                            {% if pub.is_featured %}<span
+                                class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill">Featured</span>{%
+                            endif %}
                         </td>
                         <td class="text-end">
                             <div class="btn-group">
                                 <a href="{% url 'dashboard:publication_edit' pub.pk %}"
-                                    class="btn btn-sm btn-outline-secondary" title="Edit">
-                                    <i class="bi bi-pencil"></i>
-                                </a>
+                                    class="btn btn-sm btn-outline-secondary" title="Edit"><i
+                                        class="bi bi-pencil"></i></a>
                                 <a href="{% url 'dashboard:publication_delete' pub.pk %}"
                                     class="btn btn-sm btn-outline-danger" title="Delete"
-                                    onclick="event.preventDefault(); if(confirm('Delete this publication?')) { document.getElementById('delete-form-{{ pub.pk }}').submit(); }">
-                                    <i class="bi bi-trash"></i>
-                                </a>
+                                    onclick="event.preventDefault(); if(confirm('Delete this publication?')) { document.getElementById('delete-form-{{ pub.pk }}').submit(); }"><i
+                                        class="bi bi-trash"></i></a>
                             </div>
                         </td>
                     </tr>
                     {% empty %}
                     <tr>
-                        <td colspan="6" class="text-center py-5">
-                            <i class="bi bi-files fs-1 text-muted d-block mb-3"></i>
+                        <td colspan="6" class="text-center py-5"><i
+                                class="bi bi-files fs-1 text-muted d-block mb-3"></i>
                             <p class="text-muted">No publications found.</p>
                         </td>
                     </tr>
@@ -144,27 +116,15 @@
             </table>
         </div>
     </form>
-
-    {% for pub in publications %}
-    <form id="delete-form-{{ pub.pk }}" action="{% url 'dashboard:publication_delete' pub.pk %}" method="post"
-        class="d-none">
-        {% csrf_token %}
-    </form>
-    {% endfor %}
+    {% for pub in publications %}<form id="delete-form-{{ pub.pk }}"
+        action="{% url 'dashboard:publication_delete' pub.pk %}" method="post" class="d-none">{% csrf_token %}</form>{%
+    endfor %}
 </div>
-
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const selectAll = document.getElementById('selectAll');
         const checkboxes = document.querySelectorAll('.item-checkbox');
-
-        if (selectAll) {
-            selectAll.addEventListener('change', function () {
-                checkboxes.forEach(cb => {
-                    cb.checked = selectAll.checked;
-                });
-            });
-        }
+        if (selectAll) { selectAll.addEventListener('change', function () { checkboxes.forEach(cb => { cb.checked = selectAll.checked; }); }); }
     });
 </script>
 {% endblock %}

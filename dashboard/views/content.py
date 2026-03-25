@@ -27,7 +27,12 @@ def homepage_stats_update(request):
             return redirect('dashboard:home')
     else:
         form = HomePageStatsForm(instance=stats)
-    return render(request, 'dashboard/carousel_form.html', {'form': form, 'action': 'Update Stats'})
+    return render(request, 'dashboard/generic_form.html', {
+        'form': form, 
+        'action': 'Update Stats',
+        'title': 'Homepage Stats',
+        'submit_label': 'Update Statistics'
+    })
 
 @login_required
 def homepage_content_update(request):
@@ -41,7 +46,12 @@ def homepage_content_update(request):
             return redirect('dashboard:home')
     else:
         form = HomePageContentForm(instance=content)
-    return render(request, 'dashboard/carousel_form.html', {'form': form, 'action': 'Update Content'})
+    return render(request, 'dashboard/generic_form.html', {
+        'form': form, 
+        'action': 'Update Content',
+        'title': 'Homepage Content',
+        'submit_label': 'Update Website Content'
+    })
 
 @login_required
 def carousel_list(request):
