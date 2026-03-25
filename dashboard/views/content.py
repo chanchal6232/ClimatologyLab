@@ -27,7 +27,7 @@ def homepage_stats_update(request):
             return redirect('dashboard:home')
     else:
         form = HomePageStatsForm(instance=stats)
-    return render(request, 'dashboard/content/stats_form.html', {'form': form})
+    return render(request, 'dashboard/carousel_form.html', {'form': form, 'action': 'Update Stats'})
 
 @login_required
 def homepage_content_update(request):
@@ -41,13 +41,13 @@ def homepage_content_update(request):
             return redirect('dashboard:home')
     else:
         form = HomePageContentForm(instance=content)
-    return render(request, 'dashboard/content/homepage_content_form.html', {'form': form})
+    return render(request, 'dashboard/carousel_form.html', {'form': form, 'action': 'Update Content'})
 
 @login_required
 def carousel_list(request):
     """List carousel images"""
     images = CarouselImage.objects.all().order_by('order')
-    return render(request, 'dashboard/content/carousel_list.html', {'images': images})
+    return render(request, 'dashboard/carousel_list.html', {'images': images})
 
 @login_required
 def carousel_add(request):
@@ -60,7 +60,7 @@ def carousel_add(request):
             return redirect('dashboard:carousel_list')
     else:
         form = CarouselImageForm()
-    return render(request, 'dashboard/content/carousel_form.html', {'form': form, 'action': 'Add'})
+    return render(request, 'dashboard/carousel_form.html', {'form': form, 'action': 'Add'})
 
 @login_required
 def carousel_edit(request, pk):
@@ -74,7 +74,7 @@ def carousel_edit(request, pk):
             return redirect('dashboard:carousel_list')
     else:
         form = CarouselImageForm(instance=image)
-    return render(request, 'dashboard/content/carousel_form.html', {'form': form, 'action': 'Edit', 'image': image})
+    return render(request, 'dashboard/carousel_form.html', {'form': form, 'action': 'Edit', 'image': image})
 
 @login_required
 def carousel_delete(request, pk):

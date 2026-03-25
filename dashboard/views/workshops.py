@@ -14,7 +14,7 @@ def workshop_list(request):
     workshops_list = Workshop.objects.all().order_by('-event_date')
     
     # Search functionality
-    search_query = request.GET.get('search', '').strip()
+    search_query = request.GET.get('q', '').strip()
     if search_query:
         workshops_list = workshops_list.filter(
             Q(title__icontains=search_query) | 
@@ -27,9 +27,9 @@ def workshop_list(request):
     
     context = {
         'workshops': workshops,
-        'search_query': search_query,
+        'query': search_query,
     }
-    return render(request, 'dashboard/workshops/workshop_list.html', context)
+    return render(request, 'dashboard/workshops_list.html', context)
 
 @login_required
 def workshop_add(request):
@@ -42,7 +42,7 @@ def workshop_add(request):
             return redirect('dashboard:workshop_list')
     else:
         form = WorkshopForm()
-    return render(request, 'dashboard/workshops/workshop_form.html', {'form': form, 'action': 'Add'})
+    return render(request, 'dashboard/workshop_form.html', {'form': form, 'action': 'Add'})
 
 @login_required
 def workshop_edit(request, pk):
@@ -56,7 +56,7 @@ def workshop_edit(request, pk):
             return redirect('dashboard:workshop_list')
     else:
         form = WorkshopForm(instance=workshop)
-    return render(request, 'dashboard/workshops/workshop_form.html', {'form': form, 'action': 'Edit', 'workshop': workshop})
+    return render(request, 'dashboard/workshop_form.html', {'form': form, 'action': 'Edit', 'workshop': workshop})
 
 @login_required
 def workshop_delete(request, pk):
@@ -86,7 +86,7 @@ def rt_notice_list(request):
     page_number = request.GET.get('page')
     notices = paginator.get_page(page_number)
     
-    return render(request, 'dashboard/workshops/rt_notice_list.html', {'notices': notices, 'search_query': search_query})
+    return render(request, 'dashboard/rt_list.html', {'notices': notices, 'query': search_query})
 
 @login_required
 def rt_notice_add(request):
@@ -99,7 +99,7 @@ def rt_notice_add(request):
             return redirect('dashboard:rt_notice_list')
     else:
         form = RTNoticeForm()
-    return render(request, 'dashboard/workshops/rt_notice_form.html', {'form': form, 'action': 'Add'})
+    return render(request, 'dashboard/rt_form.html', {'form': form, 'action': 'Add'})
 
 @login_required
 def rt_notice_edit(request, pk):
@@ -113,7 +113,7 @@ def rt_notice_edit(request, pk):
             return redirect('dashboard:rt_notice_list')
     else:
         form = RTNoticeForm(instance=notice)
-    return render(request, 'dashboard/workshops/rt_notice_form.html', {'form': form, 'action': 'Edit', 'notice': notice})
+    return render(request, 'dashboard/rt_form.html', {'form': form, 'action': 'Edit', 'notice': notice})
 
 @login_required
 def rt_notice_delete(request, pk):

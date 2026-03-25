@@ -18,9 +18,7 @@ def publication_list(request):
         publications_list = publications_list.filter(
             Q(title__icontains=search_query) | 
             Q(authors__icontains=search_query) |
-            # Check journal_name vs journal in models
-            Q(journal__icontains=search_query) |
-            Q(publisher__icontains=search_query)
+            Q(journal__icontains=search_query)
         )
         
     # Filter functionality
@@ -34,10 +32,12 @@ def publication_list(request):
     
     context = {
         'publications': publications,
-        'search_query': search_query,
-        'category_filter': category_filter,
+        'query': search_query,
+        'current_category': category_filter or 'all',
+        'categories': Publication.CATEGORY_CHOICES,
+        'total_count': Publication.objects.count(),
     }
-    return render(request, 'dashboard/publications/publication_list.html', context)
+    return render(request, 'dashboard/publications_list.html', context)
 
 @login_required
 def publication_add(request):
@@ -50,7 +50,7 @@ def publication_add(request):
             return redirect('dashboard:publication_list')
     else:
         form = PublicationForm()
-    return render(request, 'dashboard/publications/publication_form.html', {'form': form, 'action': 'Add'})
+    return render(request, 'dashboard/publication_form.html', {'form': form, 'action': 'Add'})
 
 @login_required
 def publication_edit(request, pk):
@@ -64,7 +64,7 @@ def publication_edit(request, pk):
             return redirect('dashboard:publication_list')
     else:
         form = PublicationForm(instance=publication)
-    return render(request, 'dashboard/publications/publication_form.html', {'form': form, 'action': 'Edit', 'publication': publication})
+    return render(request, 'dashboard/publication_form.html', {'form': form, 'action': 'Edit', 'publication': publication})
 
 @login_required
 def publication_delete(request, pk):

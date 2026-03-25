@@ -15,7 +15,7 @@ def impact_story_list(request):
     paginator = Paginator(stories_list, 20)
     page_number = request.GET.get('page')
     stories = paginator.get_page(page_number)
-    return render(request, 'dashboard/impact/impact_story_list.html', {'stories': stories})
+    return render(request, 'dashboard/impact_list.html', {'stories': stories})
 
 @login_required
 def impact_story_add(request):
@@ -28,7 +28,7 @@ def impact_story_add(request):
             return redirect('dashboard:impact_story_list')
     else:
         form = ImpactStoryForm()
-    return render(request, 'dashboard/impact/impact_story_form.html', {'form': form, 'action': 'Add'})
+    return render(request, 'dashboard/rt_form.html', {'form': form, 'action': 'Add'})
 
 @login_required
 def impact_story_edit(request, pk):
@@ -42,7 +42,7 @@ def impact_story_edit(request, pk):
             return redirect('dashboard:impact_story_list')
     else:
         form = ImpactStoryForm(instance=story)
-    return render(request, 'dashboard/impact/impact_story_form.html', {'form': form, 'action': 'Edit', 'story': story})
+    return render(request, 'dashboard/rt_form.html', {'form': form, 'action': 'Edit', 'story': story})
 
 @login_required
 def impact_story_delete(request, pk):
@@ -63,7 +63,7 @@ def research_highlight_list(request):
     paginator = Paginator(highlights_list, 20)
     page_number = request.GET.get('page')
     highlights = paginator.get_page(page_number)
-    return render(request, 'dashboard/impact/research_highlight_list.html', {'highlights': highlights})
+    return render(request, 'dashboard/impact_list.html', {'highlights': highlights, 'type': 'highlights'})
 
 @login_required
 def research_highlight_add(request):
@@ -76,7 +76,7 @@ def research_highlight_add(request):
             return redirect('dashboard:research_highlight_list')
     else:
         form = ResearchHighlightForm()
-    return render(request, 'dashboard/impact/research_highlight_form.html', {'form': form, 'action': 'Add'})
+    return render(request, 'dashboard/rt_form.html', {'form': form, 'action': 'Add'})
 
 @login_required
 def research_highlight_edit(request, pk):
@@ -90,7 +90,7 @@ def research_highlight_edit(request, pk):
             return redirect('dashboard:research_highlight_list')
     else:
         form = ResearchHighlightForm(instance=highlight)
-    return render(request, 'dashboard/impact/research_highlight_form.html', {'form': form, 'action': 'Edit', 'highlight': highlight})
+    return render(request, 'dashboard/rt_form.html', {'form': form, 'action': 'Edit', 'highlight': highlight})
 
 @login_required
 def research_highlight_delete(request, pk):
@@ -111,7 +111,7 @@ def policy_impact_list(request):
     paginator = Paginator(impacts_list, 20)
     page_number = request.GET.get('page')
     impacts = paginator.get_page(page_number)
-    return render(request, 'dashboard/impact/policy_impact_list.html', {'impacts': impacts})
+    return render(request, 'dashboard/impact_list.html', {'impacts': impacts, 'type': 'policy'})
 
 @login_required
 def policy_impact_add(request):
@@ -124,7 +124,7 @@ def policy_impact_add(request):
             return redirect('dashboard:policy_impact_list')
     else:
         form = PolicyImpactForm()
-    return render(request, 'dashboard/impact/policy_impact_form.html', {'form': form, 'action': 'Add'})
+    return render(request, 'dashboard/rt_form.html', {'form': form, 'action': 'Add'})
 
 @login_required
 def policy_impact_edit(request, pk):
@@ -138,7 +138,7 @@ def policy_impact_edit(request, pk):
             return redirect('dashboard:policy_impact_list')
     else:
         form = PolicyImpactForm(instance=impact)
-    return render(request, 'dashboard/impact/policy_impact_form.html', {'form': form, 'action': 'Edit', 'impact': impact})
+    return render(request, 'dashboard/rt_form.html', {'form': form, 'action': 'Edit', 'impact': impact})
 
 @login_required
 def policy_impact_delete(request, pk):

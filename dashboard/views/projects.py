@@ -13,7 +13,7 @@ def project_list(request):
     projects_list = ResearchProject.objects.all().order_by('-start_date')
     
     # Search functionality
-    search_query = request.GET.get('search', '').strip()
+    search_query = request.GET.get('q', '').strip()
     if search_query:
         projects_list = projects_list.filter(
             Q(title__icontains=search_query) | 
@@ -38,11 +38,11 @@ def project_list(request):
     
     context = {
         'projects': projects,
-        'search_query': search_query,
+        'query': search_query,
         'type_filter': type_filter,
         'status_filter': status_filter,
     }
-    return render(request, 'dashboard/projects/project_list.html', context)
+    return render(request, 'dashboard/projects_list.html', context)
 
 @login_required
 def project_add(request):
@@ -55,7 +55,7 @@ def project_add(request):
             return redirect('dashboard:project_list')
     else:
         form = ProjectForm()
-    return render(request, 'dashboard/projects/project_form.html', {'form': form, 'action': 'Add'})
+    return render(request, 'dashboard/project_form.html', {'form': form, 'action': 'Add'})
 
 @login_required
 def project_edit(request, pk):
@@ -69,7 +69,7 @@ def project_edit(request, pk):
             return redirect('dashboard:project_list')
     else:
         form = ProjectForm(instance=project)
-    return render(request, 'dashboard/projects/project_form.html', {'form': form, 'action': 'Edit', 'project': project})
+    return render(request, 'dashboard/project_form.html', {'form': form, 'action': 'Edit', 'project': project})
 
 @login_required
 def project_delete(request, pk):

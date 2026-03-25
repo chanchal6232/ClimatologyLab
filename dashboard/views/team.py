@@ -26,10 +26,10 @@ def team_list(request):
     team = paginator.get_page(page_number)
     
     context = {
-        'team': team,
-        'search_query': search_query,
+        'members': team,
+        'query': search_query,
     }
-    return render(request, 'dashboard/team/team_list.html', context)
+    return render(request, 'dashboard/team_list.html', context)
 
 @login_required
 def team_add(request):
@@ -42,7 +42,7 @@ def team_add(request):
             return redirect('dashboard:team_list')
     else:
         form = TeamMemberForm()
-    return render(request, 'dashboard/team/team_form.html', {'form': form, 'action': 'Add'})
+    return render(request, 'dashboard/team_form.html', {'form': form, 'action': 'Add'})
 
 @login_required
 def team_edit(request, pk):
@@ -56,7 +56,7 @@ def team_edit(request, pk):
             return redirect('dashboard:team_list')
     else:
         form = TeamMemberForm(instance=member)
-    return render(request, 'dashboard/team/team_form.html', {'form': form, 'action': 'Edit', 'member': member})
+    return render(request, 'dashboard/team_form.html', {'form': form, 'action': 'Edit', 'member': member})
 
 @login_required
 def team_delete(request, pk):

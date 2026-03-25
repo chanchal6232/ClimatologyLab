@@ -44,10 +44,20 @@ MODEL_RESOURCE_MAP = {
 def dashboard_home(request):
     """Dashboard home view with stats and summary"""
     stats = {
-        'publications': Publication.objects.count(),
-        'projects': ResearchProject.objects.count(),
-        'team_members': TeamMember.objects.count(),
-        'workshops': Workshop.objects.count(),
+        'project_count': ResearchProject.objects.count(),
+        'pub_count': Publication.objects.count(),
+        'team_count': TeamMember.objects.count(),
+        'workshop_count': Workshop.objects.count(),
+        'rt_count': RTNotice.objects.count(),
+        'carousel_count': CarouselImage.objects.count(),
+        'impact_count': ImpactStory.objects.count(),
+        
+        # Category-specific counts for the UI boxes
+        'j_c': Publication.objects.filter(category='journal').count(),
+        'c_c': Publication.objects.filter(category='conference').count(),
+        'b_c': Publication.objects.filter(category='book').count(),
+        'bg_c': Publication.objects.filter(category='guideline').count(),
+        'o_c': Publication.objects.filter(category='other').count(),
     }
     return render(request, 'dashboard/home.html', stats)
 
