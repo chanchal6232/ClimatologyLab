@@ -35,12 +35,8 @@ class PublicationResource(resources.ModelResource):
     title = fields.Field(attribute='title', column_name='TITLE')
     authors = fields.Field(attribute='authors', column_name='AUTHORS')
     
-    def before_import(self, dataset, **kwargs):
-        # 1. Normalize all headers to UPPERCASE to avoid "Column not found" errors
-        dataset.headers = [str(h).upper().strip() for h in dataset.headers]
-        
     def before_import_row(self, row, **kwargs):
-        # 2. Flexible Column Mapping (Handle variations like "Publication date", "Authors List", etc.)
+        # 1. Flexible Column Mapping (Handle variations like "Publication date", "Authors List", etc.)
         mappings = {
             'DATE': ['PUBLICATION DATE', 'PUBLICATION YEAR', 'YEAR', 'DATE'],
             'AUTHORS': ['AUTHORS', 'AUTHOR', 'CONTRIBUTORS'],

@@ -1,33 +1,24 @@
-from django.shortcuts import render, get_object_or_404
-from core.models import (
-    HomePageStats, HomePageContent, RTNotice, 
-    CarouselImage, ImpactStory, ResearchHighlight, PolicyImpact
-)
+from itertools import chain
+from operator import attrgetter
 
-def impact_view(request):
-    """Impact page view with dynamic content"""
-    success_stories = ImpactStory.objects.filter(is_active=True)
-    research_highlights = ResearchHighlight.objects.filter(is_active=True)
-    policy_impacts = PolicyImpact.objects.filter(is_active=True)
-    
-    context = {
-        'impact_stats': {
-            'publications_count': Publication.objects.count(),
-            'citations_count': '450+', # Manual for now
-            'collaborations_count': 12, # Manual for now
-            'outreach_count': 25 # Manual for now
-        },
-        'success_stories': success_stories,
-        'research_highlights': research_highlights,
-        'policy_impacts': policy_impacts
-    }
-    return render(request, 'impact.html', context)
-from workshops.models import Workshop
+from django.db.models import Q
+from django.shortcuts import get_object_or_404, redirect, render
+
+from core.models import (
+    CarouselImage,
+    HomePageContent,
+    HomePageStats,
+    ImpactStory,
+    PolicyImpact,
+    ResearchHighlight,
+    RTNotice,
+    Tutorial,
+)
 from projects.models import ResearchProject
 from publications.models import Publication
 from team.models import TeamMember
-from itertools import chain
-from operator import attrgetter
+from workshops.models import Workshop
+
 
 def home(request):
     """Homepage view"""
@@ -64,19 +55,13 @@ def home(request):
     return render(request, 'home.html', context)
 
 
-
-
 def projects_view(request):
     """Default projects view - redirects to research projects"""
-    from django.shortcuts import redirect
     return redirect('core:research_projects')
 
 
 def research_projects_view(request):
     """Research projects listing view with search and sort"""
-    from projects.models import ResearchProject
-    from django.db.models import Q
-    
     # Base queryset
     projects = ResearchProject.objects.filter(is_active=True, project_type='research')
     
@@ -119,9 +104,6 @@ def research_projects_view(request):
 
 def consultancy_projects_view(request):
     """Consultancy projects listing view with search and sort"""
-    from projects.models import ResearchProject
-    from django.db.models import Q
-    
     # Base queryset
     projects = ResearchProject.objects.filter(is_active=True, project_type='consultancy')
     
@@ -162,11 +144,8 @@ def consultancy_projects_view(request):
     return render(request, 'projects.html', context)
 
 
-
-
 def project_detail(request, pk):
     """Project detail view showing all database fields"""
-    from projects.models import ResearchProject
     project = get_object_or_404(ResearchProject, pk=pk, is_active=True)
     
     context = {
@@ -178,7 +157,6 @@ def project_detail(request, pk):
 
 def team_view(request):
     """Team listing view with categories"""
-    from team.models import TeamMember
     all_members = TeamMember.objects.filter(is_active=True)
     
     # Filter into categories based on role keywords
@@ -205,8 +183,6 @@ def team_view(request):
         'alumni_members': alumni_members,
     }
     return render(request, 'team.html', context)
-
-
 
 
 def learn_view(request):
@@ -237,20 +213,13 @@ def impact_view(request):
     return render(request, 'impact.html', context)
 
 
-
-
 def contact_view(request):
     """Contact page view"""
     return render(request, 'contact.html')
 
 
-
-
 def workshops_view(request):
     """Workshops listing view with search and sort"""
-    from workshops.models import Workshop
-    from django.db.models import Q
-    
     # Base queryset
     workshops = Workshop.objects.filter(is_active=True)
     
@@ -288,13 +257,8 @@ def workshops_view(request):
     return render(request, 'workshops.html', context)
 
 
-
-
 def tutorials_view(request):
     """Tutorials listing view with playlist support and search/sort"""
-    from core.models import Tutorial
-    from django.db.models import Q
-    
     # Search functionality
     search_query = request.GET.get('search', '').strip()
     
@@ -374,9 +338,6 @@ def tutorials_view(request):
 
 def research_technology_view(request):
     """Research and Technology notices view with search and sort"""
-    from core.models import RTNotice
-    from django.db.models import Q
-    
     # Search functionality
     search_query = request.GET.get('search', '').strip()
     
