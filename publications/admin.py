@@ -36,13 +36,32 @@ class PublicationResource(resources.ModelResource):
     authors = fields.Field(attribute='authors', column_name='AUTHORS')
     
     def before_import_row(self, row, **kwargs):
-        # 1. Handle case-insensitive headers
-        for key in list(row.keys()):
-            if key.upper() == 'AUTHORS' and key != 'AUTHORS': row['AUTHORS'] = row.pop(key)
-            if key.upper() == 'TITLE' and key != 'TITLE': row['TITLE'] = row.pop(key)
-            if key.upper() == 'DATE' and key != 'DATE': row['DATE'] = row.pop(key)
+        # 1. Flexible Column Mapping (Handle variations like "Publication date", "Authors List", etc.)
+        mappings = {
+            'DATE': ['PUBLICATION DATE', 'PUBLICATION YEAR', 'YEAR', 'DATE'],
+            'AUTHORS': ['AUTHORS', 'AUTHOR', 'CONTRIBUTORS'],
+            'TITLE': ['TITLE', 'NAME', 'PUBLICATION TITLE'],
+            'LINK': ['LINK', 'URL', 'EXTERNAL LINK'],
+            'DATA': ['DATA', 'CITATION', 'TEXT']
+        }
+        
+        for standardized_key, variations in mappings.items():
+            for key in list(row.keys()):
+                if key.upper() in variations or any(v in key.upper() for v in variations):
+                    if standardized_key not in row or not row[standardized_key]:
+                        row[standardized_key] = row[key]
+                    break
 
-        # 2. Extract Title and Authors from Citation (DATA) if missing
+        # 2. Category Normalization
+        category = str(row.get('Category', row.get('category', ''))).lower()
+        if 'conference' in category:
+            row['category'] = 'conference'
+        elif 'journal' in category:
+            row['category'] = 'journal'
+        elif 'book' in category:
+            row['category'] = 'book'
+
+        # 3. Extract Title and Authors from Citation (DATA) if missing
         citation = row.get('DATA', '')
         if citation:
             parts = [p.strip() for p in citation.split('.') if p.strip()]
@@ -51,14 +70,16 @@ class PublicationResource(resources.ModelResource):
                 
             if not row.get('AUTHORS') or row.get('AUTHORS') == "Unknown Authors":
                 for part in parts:
-                    if re.search(r'\(\d{4}\)', part):
-                        author_part = part.split('(')[0].strip()
+                    if re.search(r'\(\d{4}\)', p := str(part)):
+                        author_part = p.split('(')[0].strip()
                         if author_part:
                             row['AUTHORS'] = author_part
                             break
     class Meta:
         model = Publication
-        fields = ('id', 'citation', 'publication_date', 'external_link', 'title', 'authors', 'journal', 'category')
+        fields = ('id', 'citation', 'publication_date', 'external_link', 'title', 'authors', 'journal', 'category', 'scope')
+        import_id_fields = ('title',)
+        skip_unchanged = True
 
 # Category-specific resources to ensure correct assignment during import
 class JournalResource(PublicationResource):
