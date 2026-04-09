@@ -21,6 +21,10 @@ from django.urls import path, include, re_path
 from django.views.static import serve
 from django.contrib.auth import views as auth_views
 from dashboard import views as dashboard_views
+from django.http import HttpResponse
+
+def google_verification(request):
+    return HttpResponse("google-site-verification: googlee5ed8ef3b84d5965.html", content_type="text/html")
 
 urlpatterns = [
     path('management-console/', admin.site.urls), # Renamed admin for security
@@ -31,6 +35,7 @@ urlpatterns = [
     path('', include('core.urls')),
     path('contact/', include('contact.urls')),
     path('publications/', include('publications.urls')),
+    path('googlee5ed8ef3b84d5965.html', google_verification),
 ]
 
 # Serve media files in all environments
