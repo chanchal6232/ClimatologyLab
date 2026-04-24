@@ -225,14 +225,15 @@ CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 # ============================================
-# EMAIL CONFIGURATION - AWS SES (SMTP)
+# EMAIL CONFIGURATION - AWS SES (API via django-ses)
 # ============================================
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = os.getenv("EMAIL_HOST", "email-smtp.ap-south-1.amazonaws.com")
-EMAIL_PORT = int(os.getenv("EMAIL_PORT", "587"))
-EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS", "True") == "True"
-EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER", "")
-EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", "")
+EMAIL_BACKEND = 'django_ses.SESBackend'
+
+# Use the same credentials as storage
+AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID")
+AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
+AWS_SES_REGION_NAME = os.getenv("AWS_REGION", "ap-south-1")
+AWS_SES_REGION_ENDPOINT = f"email.{AWS_SES_REGION_NAME}.amazonaws.com"
 
 # Sender and Admin Emails
 DEFAULT_FROM_EMAIL = os.getenv(

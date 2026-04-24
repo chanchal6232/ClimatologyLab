@@ -7,7 +7,7 @@ from .models import ContactSubmission
 import threading
 
 def send_contact_emails_in_background(name, email, phone, query, submission_id):
-    """Sends both admin notification and user auto-reply via Django SMTP backend (AWS SES) in background."""
+    """Sends both admin notification and user auto-reply via Django SES API backend in background."""
     try:
         from django.core.mail import EmailMessage, get_connection
 
